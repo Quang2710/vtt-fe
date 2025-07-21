@@ -9,10 +9,10 @@ import { Menu } from "lucide-react";
 const Header = () => {
     const [isOpen, setIsOpen] = useState(false);
     return (
-        <div className="flex text-sm bg-[#F4F4F4] py-3 px-5">
+        <div className="flex text-sm bg-[#F4F4F4] py-3 px-5 relative">
 
             {/* mobile menu */}
-            <button onClick={() => setIsOpen(true)} className="lg:hidden">
+            <button onClick={() => setIsOpen(true)} className="lg:hidden absolute top-1/2 transform -translate-y-1/2">
                 <Menu size={24} className="text-gray-700" />
             </button>
             {/* Side Drawer */}

@@ -25,13 +25,13 @@ const KindnessCards = () => {
             <h2 className="text-2xl md:text-3xl font-bold mb-10 text-black">
                 Join the Acts of Kindness movement by
             </h2>
-            <div className="flex flex-col lg:flex-row gap-6 max-w-xl mx-auto">
+            <div className="flex flex-col lg:flex-row gap-6 max-w-2xl mx-auto">
                 {cards.map((card, index) => (
                     <div
                         key={index}
                         className="rounded-2xl overflow-hidden text-white shadow-md w-full"
                     >
-                        <div className="relative h-40">
+                        <div className="relative h-[250px]">
                             <Image
                                 src={card.bg}
                                 alt={`${card.title} background`}

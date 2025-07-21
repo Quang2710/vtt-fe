@@ -63,7 +63,7 @@ export default function CampaignCarousel() {
         prevArrow: <SamplePrevArrow />,
         responsive: [
             {
-                breakpoint: 768,
+                breakpoint: 769,
                 settings: {
                     slidesToShow: 1,
                     centerMode: false,
@@ -74,7 +74,7 @@ export default function CampaignCarousel() {
     };
 
     return (
-        <div className="relative lg:px-4">
+        <div className="relative lg:px-4 hero">
             <div className="p-5 border rounded-[60px] absolute z-10 bg-white border-transparent left-1/2 transform -translate-x-1/2 top-[5%] w-[calc(100%_-_16px)] lg:w-2/3 flex gap-2.5 items-center" style={{ boxShadow: '0px 10px 30px rgba(0, 0, 0, .4);' }}>
                 <Image src={'https://res.cloudinary.com/dmajhtvmd/image/upload/assets/images/default_profile_images/default_profile_4.png'} width={36} height={36} alt="" className="h-full rounded-full" />
                 <div className="text-gray text-sm lg:text-base">
