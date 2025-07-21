@@ -1,0 +1,79 @@
+'use client'
+
+import Image from "next/image";
+import Link from "next/link";
+import SearchInput from "../search-input";
+import { useState } from "react";
+import { Menu } from "lucide-react";
+
+const Header = () => {
+    const [isOpen, setIsOpen] = useState(false);
+    return (
+        <div className="flex text-sm bg-[#F4F4F4] py-3 px-5">
+
+            {/* mobile menu */}
+            <button onClick={() => setIsOpen(true)} className="lg:hidden">
+                <Menu size={24} className="text-gray-700" />
+            </button>
+            {/* Side Drawer */}
+            <div
+                className={`fixed top-0 left-0 h-full w-64 bg-white shadow-lg z-50 transform transition-transform duration-300 ${isOpen ? 'translate-x-0' : '-translate-x-full'
+                    }`}
+            >
+                {/* Menu Items */}
+                <div className="flex flex-col w-full gap-7 text-base p-4 text-gray">
+                    <SearchInput className="!w-full" />
+                    <Link href={'/'}>
+                        Chiến dịch
+                    </Link>
+                    <Link href={'/'}>
+                        Gây quỹ
+                    </Link>
+                    <Link href={'/'}>
+                        Trust & safety
+                    </Link>
+                    <Link href={'/'}>
+                        Về chúng tôi
+                    </Link>
+                    <Link href={'/'}>
+                        Câu hỏi thường gặp
+                    </Link>
+                </div>
+            </div>
+
+            {/* Backdrop */}
+            {isOpen && (
+                <div
+                    className="fixed inset-0 bg-transparent bg-opacity-40 z-40"
+                    onClick={() => setIsOpen(false)}
+                ></div>
+            )}
+            {/* end mobile menu */}
+            <div className="hidden lg:flex justify-between w-1/3 items-center">
+                <SearchInput />
+                <Link href={'/'}>
+                    Chiến dịch
+                </Link>
+                <Link href={'/'}>
+                    Gây quỹ
+                </Link>
+            </div>
+            <div className="w-full lg:w-1/3 flex justify-center">
+                <Image src={'https://res.cloudinary.com/dmajhtvmd/image/upload/v1666583023/assets/images/home/giveasia-logo.webp'} width={56} height={45} alt="logo" />
+            </div>
+            <div className="hidden lg:flex justify-between w-1/3 items-center">
+                <Link href={'/'}>
+                    Trust & safety
+                </Link>
+                <Link href={'/'}>
+                    Về chúng tôi
+                </Link>
+                <Link href={'/'}>
+                    Câu hỏi thường gặp
+                </Link>
+            </div>
+        </div>
+    );
+}
+
+export default Header;
