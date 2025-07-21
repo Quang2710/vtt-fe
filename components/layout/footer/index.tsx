@@ -63,7 +63,7 @@ const Footer = () => {
             </div>
             <div className="mx-[5%] text-center mb-10">
                 {menuLinks.map((item, index) => (
-                    <Link href={'/'} className={`text-sm text-gray px-2 relative after:content-["•"] after:ml-4 ${index === menuLinks.length - 1 ? "after:content-none" : ""
+                    <Link key={index} href={'/'} className={`text-sm text-gray px-2 relative after:content-["•"] after:ml-4 ${index === menuLinks.length - 1 ? "after:content-none" : ""
                         }`}>{item}</Link>
                 ))}
             </div>
