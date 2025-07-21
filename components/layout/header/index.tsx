@@ -24,20 +24,24 @@ const Header = () => {
                 <div className="flex flex-col w-full gap-7 text-base p-4 text-gray">
                     <SearchInput className="!w-full" />
                     <Link href={'/'}>
-                        Chiến dịch
+                        Browse
                     </Link>
                     <Link href={'/'}>
-                        Gây quỹ
+                        Fundraise
                     </Link>
+                    <hr />
                     <Link href={'/'}>
                         Trust & safety
                     </Link>
                     <Link href={'/'}>
-                        Về chúng tôi
+                        About
                     </Link>
                     <Link href={'/'}>
-                        Câu hỏi thường gặp
+                        FAQ
                     </Link>
+                    <hr />
+                    <Link href={'/'}>Login</Link>
+                    <Link href={'/'}>Register</Link>
                 </div>
             </div>
 
@@ -49,27 +53,34 @@ const Header = () => {
                 ></div>
             )}
             {/* end mobile menu */}
-            <div className="hidden lg:flex justify-between w-1/3 items-center">
+            <div className="hidden lg:flex justify-between w-[40%] items-center">
                 <SearchInput />
                 <Link href={'/'}>
-                    Chiến dịch
+                    Browse
                 </Link>
                 <Link href={'/'}>
-                    Gây quỹ
+                    Fundraise
                 </Link>
             </div>
-            <div className="w-full lg:w-1/3 flex justify-center">
+            <div className="w-full lg:w-[20%] flex justify-center">
                 <Image src={'https://res.cloudinary.com/dmajhtvmd/image/upload/v1666583023/assets/images/home/giveasia-logo.webp'} width={56} height={45} alt="logo" />
             </div>
-            <div className="hidden lg:flex justify-between w-1/3 items-center">
+            <div className="hidden lg:flex justify-between w-[40%] items-center">
                 <Link href={'/'}>
                     Trust & safety
                 </Link>
                 <Link href={'/'}>
-                    Về chúng tôi
+                    About
                 </Link>
                 <Link href={'/'}>
-                    Câu hỏi thường gặp
+                    FAQ
+                </Link>
+                <div className="w-px h-6 bg-black" />
+                <Link href={'/'}>
+                    Login
+                </Link>
+                <Link href={'/'}>
+                    Register
                 </Link>
             </div>
         </div>
