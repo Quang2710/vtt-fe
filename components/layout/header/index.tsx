@@ -40,8 +40,8 @@ const Header = () => {
                         FAQ
                     </Link>
                     <hr />
-                    <Link href={'/'}>Login</Link>
-                    <Link href={'/'}>Register</Link>
+                    <Link href={'/login'}>Login</Link>
+                    <Link href={'/register'}>Register</Link>
                 </div>
             </div>
 
@@ -63,7 +63,9 @@ const Header = () => {
                 </Link>
             </div>
             <div className="w-full lg:w-[20%] flex justify-center">
-                <Image src={'https://res.cloudinary.com/dmajhtvmd/image/upload/v1666583023/assets/images/home/giveasia-logo.webp'} width={56} height={45} alt="logo" />
+                <Link href={'/'}>
+                    <Image src={'https://res.cloudinary.com/dmajhtvmd/image/upload/v1666583023/assets/images/home/giveasia-logo.webp'} width={56} height={45} alt="logo" />
+                </Link>
             </div>
             <div className="hidden lg:flex justify-between w-[40%] items-center">
                 <Link href={'/'}>
@@ -76,10 +78,10 @@ const Header = () => {
                     FAQ
                 </Link>
                 <div className="w-px h-6 bg-black" />
-                <Link href={'/'}>
+                <Link href={'/login'}>
                     Login
                 </Link>
-                <Link href={'/'}>
+                <Link href={'/register'}>
                     Register
                 </Link>
             </div>
