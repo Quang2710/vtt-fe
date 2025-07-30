@@ -5,7 +5,7 @@ import TrendingCampaigns from "@/components/home/trending-campaign";
 import FundraisingStats from "@/components/home/trust-and-safety";
 
 const Home = () => {
-  console.log('quang test',111);
+  console.log('trung test',111);
 
   return (
     <div>
