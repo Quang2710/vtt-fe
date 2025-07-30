@@ -14,6 +14,7 @@ export const metadata = {
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
+  console.log('quang test');
   return (
     <html lang="en" className={lexendDeca.className}>
       <body><Header />{children}<Footer /></body>
