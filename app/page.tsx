@@ -1,3 +1,4 @@
+'use client'
 import CampaignCarousel from "@/components/carousel";
 import KindnessCards from "@/components/home/act-of-kindness";
 import Givers from "@/components/home/givers";
