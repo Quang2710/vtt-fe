@@ -22,7 +22,7 @@ const Header = () => {
             >
                 {/* Menu Items */}
                 <div className="flex flex-col w-full gap-7 text-base p-4 text-gray">
-                    <SearchInput className="!w-full" />
+                    <SearchInput className="!w-full" /> 
                     <Link href={'/browse'}>
                         Browse
                     </Link>
