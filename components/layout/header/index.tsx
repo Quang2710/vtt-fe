@@ -23,7 +23,7 @@ const Header = () => {
                 {/* Menu Items */}
                 <div className="flex flex-col w-full gap-7 text-base p-4 text-gray">
                     <SearchInput className="!w-full" />
-                    <Link href={'/'}>
+                    <Link href={'/browse'}>
                         Browse
                     </Link>
                     <Link href={'/'}>
@@ -55,7 +55,7 @@ const Header = () => {
             {/* end mobile menu */}
             <div className="hidden lg:flex justify-between w-[40%] items-center">
                 <SearchInput />
-                <Link href={'/'}>
+                <Link href={'/browse'}>
                     Browse
                 </Link>
                 <Link href={'/'}>
