@@ -1,12 +1,17 @@
+"use client";
+
 // components/Dropdown.tsx
 import Image from "next/image";
+import { useRouter } from "next/router";
 
 
 
-const Blog = ({ item, classes }: any) => {
+const Blog = ({ item, classes, onClick }: any) => {
+
+
     return (
 
-        <div key={item.id} className={`px-2 ${classes}`}>
+        <div className={`px-2 ${classes}`} onClick={onClick}>
             <div className="rounded-xl overflow-hidden bg-white shadow hover:shadow-lg transition">
                 <div className="relative w-full h-48">
                     <Image

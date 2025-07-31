@@ -1,6 +1,8 @@
 'use client'
 import Blog from "@/components/blog";
 import Dropdown from "@/components/dropdown";
+import { div } from "framer-motion/client";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 
@@ -84,8 +86,8 @@ const contryOptions = [
     { key: "thailand", label: "Thailand" },
     { key: "vietnam", label: "Vietnam" }
 ]
-
 const Browse = () => {
+    const router = useRouter();
     const [filterObject, setFilterObject] = useState<any>({
         category: null,
         sortBy: null,
@@ -136,9 +138,16 @@ const Browse = () => {
                 </div>
             </div>
             <div className="content-container">
-                <div className="flex flex-wrap">
+                <div className="flex flex-wrap" >
                     {campaigns.map((cat) => (
-                        <Blog classes="basis-1/3 p-2" item={cat}></Blog>
+                        <Blog
+                            onClick={() => {
+                                router.push(`/detail-blog/${cat.id}`);
+                            }}
+                            key={cat.id}
+                            classes="basis-1/3 p-2"
+                            item={cat}
+                        />
                     ))}
                 </div>
             </div>
