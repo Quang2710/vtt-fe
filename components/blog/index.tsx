@@ -12,7 +12,7 @@ const Blog = ({ item, classes, onClick }: any) => {
     return (
 
         <div className={`px-2 ${classes}`} onClick={onClick}>
-            <div className="rounded-xl overflow-hidden bg-white shadow hover:shadow-lg transition">
+            <div className="rounded-xl overflow-hidden bg-white shadow hover:shadow-lg transition h-full">
                 <div className="relative w-full h-48">
                     <Image
                         src={item.image}
