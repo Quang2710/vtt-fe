@@ -6,12 +6,12 @@
 import Image from "next/image";
 import { useState } from "react";
 import { IoIosArrowForward } from "react-icons/io";
-import StoryTab from "./StoryTab";
-import UpdatesTab from "./UpdatesTab";
-import PayoutsTab from "./PayoutsTab";
-import DonationsTab from "./DonationsTab";
-import TestimonialsTab from "./TestimonialsTab";
-import Top10Tab from "./Top10Tab";
+import StoryTab from "./campain-tab/StoryTab";
+import UpdatesTab from "./campain-tab/UpdatesTab";
+import PayoutsTab from "./campain-tab/PayoutsTab";
+import DonationsTab from "./campain-tab/DonationsTab";
+import TestimonialsTab from "./campain-tab/TestimonialsTab";
+import Top10Tab from "./campain-tab/Top10Tab";
 import { MdCurrencyExchange } from "react-icons/md";
 import { FaArrowTrendUp } from "react-icons/fa6";
 import { MdOutlineVerified } from "react-icons/md";
@@ -23,6 +23,8 @@ import { LuUserSearch } from "react-icons/lu";
 import { PiAmbulanceBold } from "react-icons/pi";
 import { TbShieldLock } from "react-icons/tb";
 import { VscVerifiedFilled } from "react-icons/vsc";
+import Link from "next/link";
+import { useParams } from "next/navigation";
 
 const DetailPage = () => {
 
@@ -37,6 +39,8 @@ const DetailPage = () => {
 
   // if (!data) return <div>Loading...</div>;
 
+  const params = useParams();
+  const slug = params?.slug || "";
   return (
     <div className="blog-container w-full bg-gray-100">
       <div className="campaign-page__container mx-[18%] p-[20px] flex gap-4 ">
@@ -332,10 +336,12 @@ const DetailPage = () => {
             </div>
           </div>
 
-          <div className="campaign-support bg-white p-[16px] rounded-[10px] mt-[20px] flex items-center justify-between p-[15px] cursor-pointer">
-            <h3 className="text-[16px] text-[#444] font-bold">Contact Support</h3>
-            <IoIosArrowForward className="text-[32px] text-gray-500 cursor-pointer" />
-          </div>
+          <Link href={`/detail-blog/${slug}/contact`} passHref legacyBehavior>
+            <a className="campaign-support bg-white p-[16px] rounded-[10px] mt-[20px] flex items-center justify-between p-[15px] cursor-pointer no-underline">
+              <h3 className="text-[16px] text-[#444] font-bold">Contact Support</h3>
+              <IoIosArrowForward className="text-[32px] text-gray-500 cursor-pointer" />
+            </a>
+          </Link>
 
         </div>
       </div>
