@@ -26,7 +26,7 @@ const Header = () => {
                     <Link href={'/browse'}>
                         Browse
                     </Link>
-                    <Link href={'/'}>
+                    <Link href={'/fundraise'}>
                         Fundraise
                     </Link>
                     <hr />
@@ -58,7 +58,7 @@ const Header = () => {
                 <Link href={'/browse'}>
                     Browse
                 </Link>
-                <Link href={'/'}>
+                <Link href={'/fundraise'}>
                     Fundraise
                 </Link>
             </div>
