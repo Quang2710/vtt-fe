@@ -43,9 +43,14 @@ export default function FundraisePage() {
                             <h1 className="text-white text-4xl font-bold drop-shadow-lg text-center px-[190px] text-[72px] mb-[24px] font-fold text-[#fff]">
                                 Fundraise for your cause today
                             </h1>
-                            <button className="cursor-pointer text-[14px] rounded-[8px] bg-[#0082ff] text-[#fff] py-[10px] px-[40px] font-medium hover:bg-[#e0e0e0] transition duration-200 shadow-[0px_3px_5px_rgba(0,0,0,0.1)]">
-                                START A FUNDRAISER
-                            </button>
+                            <Link href="/fundraise/new" passHref>
+                                <button
+                                    className="cursor-pointer text-[14px] rounded-[8px] bg-[#0082ff] text-[#fff] py-[10px] px-[40px] font-medium hover:bg-[#e0e0e0] transition duration-200 shadow-[0px_3px_5px_rgba(0,0,0,0.1)]"
+                                    type="button"
+                                >
+                                    START A FUNDRAISER
+                                </button>
+                            </Link>
                         </div>
                     </div>
                 </div>
@@ -117,9 +122,11 @@ export default function FundraisePage() {
                         </div>
 
                         <div className="fundraise-landing__cta-section my-[60px] pb-[60px] border-b border-[#eee] text-center flex flex-col justify-center items-center">
-                            <button className="loading-button fundraise-landing__cta-section__button cursor-pointer bg-[#0082ff] w-auto px-[60px] py-[14px] shadow-[0px_3px_5px_rgba(0,0,0,0.1)] rounded-[10px] font-bold text-white text-[20px] hover:-translate-y-1 transition-all duration-300 ease-in-out">
-                                START A FUNDRAISER
-                            </button>
+                            <Link href="/fundraise/new" passHref>
+                                <button className="loading-button fundraise-landing__cta-section__button cursor-pointer bg-[#0082ff] w-auto px-[60px] py-[14px] shadow-[0px_3px_5px_rgba(0,0,0,0.1)] rounded-[10px] font-bold text-white text-[20px] hover:-translate-y-1 transition-all duration-300 ease-in-out">
+                                    START A FUNDRAISER
+                                </button>
+                            </Link>
                             <p className="text-[20px] text-black font-semibold mt-[16px] mb-[10px] my-auto px-[20px] max-w-2xl">
                                 More than 27,000 fundraisers have successfully raised over S$139 million million through Give.Asia.
                             </p>
@@ -206,9 +213,11 @@ export default function FundraisePage() {
 ">More than 27,000 fundraisers have successfully raised over S$139 million million through Give.Asia.
 
                             </p>
-                            <button className="m-auto mt-[20px] loading-button fundraise-landing__cta-section__button cursor-pointer bg-[#0082ff] w-auto px-[60px] py-[14px] shadow-[0px_3px_5px_rgba(0,0,0,0.1)] rounded-[10px] font-bold text-white text-[20px] hover:-translate-y-1 transition-all duration-300 ease-in-out">
-                                START A FUNDRAISER
-                            </button>
+                            <Link href="/fundraise/new" passHref>
+                                <button className="m-auto mt-[20px] loading-button fundraise-landing__cta-section__button cursor-pointer bg-[#0082ff] w-auto px-[60px] py-[14px] shadow-[0px_3px_5px_rgba(0,0,0,0.1)] rounded-[10px] font-bold text-white text-[20px] hover:-translate-y-1 transition-all duration-300 ease-in-out">
+                                    START A FUNDRAISER
+                                </button>
+                            </Link>
                         </div>
                     </div>
                 </div>
