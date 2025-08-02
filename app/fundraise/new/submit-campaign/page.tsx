@@ -2,34 +2,9 @@
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 
-const DIAGNOSIS_OPTIONS = [
-  { value: "this_week", label: "This week" },
-  { value: "this_month", label: "This month" },
-  { value: "last_month", label: "Last month" },
-  { value: "last_6_months", label: "Last 6 months" },
-  { value: "this_year", label: "This year" },
-  { value: "last_year", label: "Last year" },
-];
 
-const DiagnosisSelect: React.FC<{
-  value: string;
-  onChange: (val: string) => void;
-}> = ({ value, onChange }) => (
-  <select
-    className="w-full px-4 py-3 border border-gray-300 rounded-lg text-[16px] focus:outline-none focus:ring-0 bg-white mb-3"
-    value={value}
-    onChange={e => onChange(e.target.value)}
-  >
-    <option value="">Select accident occur time...</option>
-    {DIAGNOSIS_OPTIONS.map(option => (
-      <option value={option.value} key={option.value}>
-        {option.label}
-      </option>
-    ))}
-  </select>
-);
 
-const AccidentOccurPage: React.FC = () => {
+const SubmitCampaignPage: React.FC = () => {
   const [visible, setVisible] = useState(false);
   const [showTyping, setShowTyping] = useState(true);
   const [illness, setIllness] = useState("");
@@ -57,15 +32,28 @@ const AccidentOccurPage: React.FC = () => {
       {visible && (
         <>
           <div className="w-full self-start transition-all duration-500 text-[18px] leading-[24px] font-semibold text-[#333] bg-white border border-[#eee] rounded-[12px] shadow-[0_20px_30px_0_rgba(0,0,0,0.05)] py-[15px] px-[25px] mb-[10px]">
-            When did this accident occur?
+            Awesome! 🎉You're almost ready to start fundraising.
           </div>
-          <DiagnosisSelect value={illness} onChange={setIllness} />
+          <div className="w-full self-start transition-all duration-500 text-[16px] leading-[24px] text-[#333] bg-white border border-[#eee] rounded-[12px] shadow-[0_20px_30px_0_rgba(0,0,0,0.05)] py-[15px] px-[25px] mb-[10px]">
+            This is your short campaign URL. You can customize your short URL for easy sharing. Ideally, the short URL should contains fewer than 10 letters.
+          </div>
+
+         <p className="text-[#999] text-[16px] font-medium">Campaign page URL</p>
+          <div className="flex items-center box-border bg-[#f4f4f4] rounded-[12px] text-[14px] font-normal text-[#666] mt-[10px] overflow-hidden w-full" style={{padding: '2px 2px 2px 10px', lineHeight: '30px'}}>
+            <span className="text-[#666] text-[16px] font-bold mr-1">/</span>
+            <input
+              type="text"
+              className="bg-transparent border-none outline-none w-full text-[14px] font-normal text-[#666]"
+              style={{lineHeight: '30px', padding: 0, margin: 0}}
+              placeholder="Enter short URL..."
+            />
+          </div>
           <button
-            className="cursor-pointer w-full bg-[#EB008C] text-white text-[18px] font-semibold py-3 rounded-lg shadow hover:bg-[#c90074] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed mt-3"
-            disabled={!illness.trim()}
-            onClick={() => router.push("/fundraise/new/state-of-treatment")}
+            className="cursor-pointer w-full bg-[#EB008C] text-white text-[14px] font-semibold rounded-lg shadow hover:bg-[#c90074] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed mt-3 h-10"
+            // disabled={!illness.trim()}
+            onClick={() => router.push("/fundraise/new/thanks-sharing")}
           >
-            Next
+             SUBMIT YOUR CAMPAIGN
           </button>
         </>
       )}
@@ -73,4 +61,4 @@ const AccidentOccurPage: React.FC = () => {
   );
 };
 
-export default AccidentOccurPage;
+export default SubmitCampaignPage;
