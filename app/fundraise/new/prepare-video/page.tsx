@@ -81,7 +81,7 @@ const PrepareVideoPage: React.FC = () => {
             type="button"
             className="w-full text-[#EB008C] text-[14px] font-semibold mt-2 bg-transparent hover:text-[#c90074] transition cursor-pointer mt-[10px]"
             style={{ textDecoration: "none" }}
-            onClick={() => router.push("/fundraise/new/message-ideas")}
+            onClick={() => router.push("/fundraise/new/tags-describe")}
           >
             SKIP FOR NOW
           </button>

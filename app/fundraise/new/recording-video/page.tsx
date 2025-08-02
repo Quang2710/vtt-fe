@@ -3,7 +3,9 @@ import { useRouter } from "next/navigation";
 import React, { useEffect, useRef, useState } from "react";
 
 const RecordingVideoPage: React.FC = () => {
+  const [refreshCamera, setRefreshCamera] = useState(0);
   const [visible, setVisible] = useState(false);
+  const [hasPermission, setHasPermission] = useState(false);
   const [showTyping, setShowTyping] = useState(true);
   const [countdown, setCountdown] = useState<number | null>(null);
   const [isRecording, setIsRecording] = useState(false);
@@ -16,7 +18,6 @@ const RecordingVideoPage: React.FC = () => {
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const router = useRouter();
 
-  // Typing effect
   useEffect(() => {
     setShowTyping(true);
     const timer = setTimeout(() => {
@@ -25,6 +26,94 @@ const RecordingVideoPage: React.FC = () => {
     }, 400);
     return () => clearTimeout(timer);
   }, []);
+
+  // Tự động hỏi quyền truy cập camera/microphone khi vào trang
+useEffect(() => {
+  if (!visible) return;
+  let previewStream: MediaStream | null = null;
+  let permissionChecked = false;
+  async function checkAndAskCameraPermission() {
+    // Kiểm tra trạng thái quyền camera
+    if (navigator.permissions) {
+      try {
+        const result = await navigator.permissions.query({ name: "camera" as PermissionName });
+        if (result.state === "granted") {
+          // Đã có quyền, lấy stream luôn
+          previewStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" }, audio: false });
+          setHasPermission(true);
+          setMediaStream(previewStream);
+          if (videoRef.current) {
+            videoRef.current.srcObject = previewStream;
+            videoRef.current.play();
+          }
+          permissionChecked = true;
+        } else if (result.state === "prompt" || result.state === "denied") {
+          // Chưa có quyền hoặc bị từ chối, hỏi lại
+          try {
+            previewStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" }, audio: false });
+            setHasPermission(true);
+            setMediaStream(previewStream);
+            if (videoRef.current) {
+              videoRef.current.srcObject = previewStream;
+              videoRef.current.play();
+            }
+            permissionChecked = true;
+          } catch (err) {
+            setHasPermission(false);
+            setMediaStream(null);
+            if (videoRef.current) {
+              videoRef.current.srcObject = null;
+            }
+            permissionChecked = true;
+          }
+        }
+      } catch (err) {
+        // Nếu không kiểm tra được permission, fallback hỏi luôn
+        try {
+          previewStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" }, audio: false });
+          setHasPermission(true);
+          setMediaStream(previewStream);
+          if (videoRef.current) {
+            videoRef.current.srcObject = previewStream;
+            videoRef.current.play();
+          }
+        } catch (err) {
+          setHasPermission(false);
+          setMediaStream(null);
+          if (videoRef.current) {
+            videoRef.current.srcObject = null;
+          }
+        }
+      }
+    } else {
+      // Trình duyệt không hỗ trợ navigator.permissions, hỏi luôn
+      try {
+        previewStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" }, audio: false });
+        setHasPermission(true);
+        setMediaStream(previewStream);
+        if (videoRef.current) {
+          videoRef.current.srcObject = previewStream;
+          videoRef.current.play();
+        }
+      } catch (err) {
+        setHasPermission(false);
+        setMediaStream(null);
+        if (videoRef.current) {
+          videoRef.current.srcObject = null;
+        }
+      }
+    }
+  }
+  checkAndAskCameraPermission();
+  return () => {
+    if (previewStream) {
+      previewStream.getTracks().forEach((track) => track.stop());
+    }
+    if (videoRef.current) {
+      videoRef.current.srcObject = null;
+    }
+  };
+}, [visible, refreshCamera, recordedBlob]);
 
   // Countdown before recording
   useEffect(() => {
@@ -67,7 +156,7 @@ const RecordingVideoPage: React.FC = () => {
     setRecordedBlob(null);
     setPreviewUrl(null);
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+      const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" }, audio: true });
       setMediaStream(stream);
       setIsRecording(true);
       setRecordTime(60);
@@ -85,6 +174,7 @@ const RecordingVideoPage: React.FC = () => {
         const blob = new Blob(chunks, { type: "video/webm" });
         setRecordedBlob(blob);
         setPreviewUrl(URL.createObjectURL(blob));
+        // Sau khi stop, chuyển về camera preview nếu muốn
         if (videoRef.current) {
           videoRef.current.srcObject = null;
         }
@@ -131,30 +221,39 @@ const RecordingVideoPage: React.FC = () => {
           <div className="w-full self-start transition-all duration-500 text-[14px] leading-[24px] font-semibold text-[#333] bg-white border border-[#eee] rounded-[12px] shadow-[0_20px_30px_0_rgba(0,0,0,0.05)] py-[15px] px-[25px] mb-[10px]">
             Awesome! Please continue if you are happy with the video.
           </div>
-          <p className="my-[16px] text-[16px] text-black">
-            To record a video update, please allow camera and microphone access on your browser.
-          </p>
-          <div className="w-full h-[180px] bg-[#f4f4f4] rounded-lg flex items-center justify-center mb-4 relative overflow-hidden">
-            {isRecording ? (
-              <>
-                <span className="absolute top-2 left-3 text-[18px] font-bold text-[#EB008C] bg-white bg-opacity-80 px-3 py-1 rounded">
-                  {recordTime}s
-                </span>
+          {!hasPermission && (
+            <p className="my-[16px] text-[16px] text-black">
+              To record a video update, please allow camera and microphone access on your browser.
+            </p>
+          )}
+          <div className="w-full h-auto min-h-[400px] bg-[#f4f4f4] rounded-lg flex items-center justify-center mb-4 relative overflow-hidden">
+            {recordedBlob && previewUrl ? (
+              <video
+                src={previewUrl}
+                controls
+                autoPlay
+                className="w-full h-full object-cover rounded-lg"
+              />
+            ) : hasPermission ? (
+              <div className="relative w-full h-full">
                 <video
                   ref={videoRef}
                   className="w-full h-full object-cover rounded-lg"
                   autoPlay
                   muted
+                  playsInline
                 />
-              </>
-            ) : countdown !== null && countdown > 0 ? (
-              <span className="text-[48px] font-bold text-[#EB008C]">{countdown}</span>
-            ) : recordedBlob && previewUrl ? (
-              <video
-                src={previewUrl}
-                controls
-                className="w-full h-full object-cover rounded-lg"
-              />
+                {countdown !== null && countdown > 0 && (
+                  <div className="absolute inset-0 flex items-center justify-center z-10" style={{background: 'rgba(244,244,244,0.35)', backdropFilter: 'blur(6px)'}}>
+                    <span className="text-[64px] font-bold text-[#EB008C] drop-shadow-lg">{countdown}</span>
+                  </div>
+                )}
+                {isRecording && (
+                  <span className="absolute top-2 left-3 text-[18px] font-bold text-[#EB008C] bg-white bg-opacity-80 px-3 py-1 rounded z-20">
+                    {recordTime}s
+                  </span>
+                )}
+              </div>
             ) : (
               <span className="text-[#bbb] text-[16px]">Your camera preview will appear here</span>
             )}
@@ -167,6 +266,30 @@ const RecordingVideoPage: React.FC = () => {
             >
               STOP RECORDING
             </button>
+          ) : recordedBlob && previewUrl ? (
+            <div className="flex flex-col gap-4 mt-4">
+              <button
+                className="cursor-pointer w-full bg-[#EB008C] text-white text-[18px] font-semibold rounded-lg shadow hover:bg-[#c90074] transition-all duration-200"
+                style={{ height: "38px", paddingTop: 0, paddingBottom: 0 }}
+                onClick={() => router.push("/fundraise/new/tags-describe")}
+              >
+                PROCEED WITH VIDEO
+              </button>
+              <button
+                className="cursor-pointer w-full bg-[#f4f4f4] text-[#EB008C] text-[18px] font-semibold rounded-lg shadow hover:bg-[#e0e0e0] transition-all duration-200"
+                style={{ height: "38px", paddingTop: 0, paddingBottom: 0, border: "1px solid #EB008C" }}
+                onClick={() => {
+                  setRecordedBlob(null);
+                  setPreviewUrl(null);
+                  setCountdown(null);
+                  setIsRecording(false);
+                  setRecordTime(60);
+                  setRefreshCamera((v) => v + 1);
+                }}
+              >
+                RETAKE
+              </button>
+            </div>
           ) : (
             <button
               className="cursor-pointer w-full bg-[#EB008C] text-white text-[18px] font-semibold rounded-lg shadow hover:bg-[#c90074] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed mt-4"
