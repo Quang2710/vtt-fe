@@ -63,8 +63,8 @@ const DetailPage = () => {
   const slug = params?.slug || "";
   return (
     <div className="blog-container w-full bg-gray-100">
-      <div className="campaign-page__container mx-[18%] p-[20px] flex gap-4 ">
-        <div className="campaign-container w-[68%]">
+      <div className="campaign-page__container mx-[10%] p-[20px] flex flex-col gap-4 sm:flex-row sm:flex-nowrap ">
+        <div className="campaign-container w-full max-w-full sm:w-[68%]">
           <div className="categori-name flex gap-2 mt-[30px]">
             <div className="w-[fit-content] px-[8px] py-[4px] text-[#535353] text-[12px] font-medium rounded-[25px] border border-[#eee]">
               Baby
@@ -89,27 +89,27 @@ const DetailPage = () => {
                 allowFullScreen
               ></iframe>
             </div>
-            <div className="image-campaign bg-white rounded-bl-[10px] rounded-br-[10px] w-full flex px-[15px] py-[10px] flex justify-between items-center">
-              <div className="img-container flex gap-3 w-[50%]">
+            <div className="image-campaign bg-white rounded-bl-[10px] rounded-br-[10px] w-full flex flex-col sm:flex-row px-[8px] py-[8px] sm:px-[15px] sm:py-[10px] justify-between items-center gap-2 sm:gap-0">
+              <div className="img-container flex gap-2 sm:gap-3 w-full sm:w-[50%] justify-center sm:justify-start">
                 <img
-                  className="w-[80px] h-[50px] object-cover rounded-[10px] cursor-pointer"
+                  className="w-[80px] h-[50px] sm:w-[80px] sm:h-[50px] w-[60px] h-[40px] object-cover rounded-[10px] cursor-pointer"
                   src="https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&q=60"
                   alt="Campaign Image"
                 />
                 <img
-                  className="w-[80px] h-[50px] object-cover rounded-[10px] cursor-pointer"
+                  className="w-[80px] h-[50px] sm:w-[80px] sm:h-[50px] w-[60px] h-[40px] object-cover rounded-[10px] cursor-pointer"
                   src="https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&q=60"
                   alt="Campaign Image"
                 />
                 <img
-                  className="w-[80px] h-[50px] object-cover rounded-[10px] cursor-pointer"
+                  className="w-[80px] h-[50px] sm:w-[80px] sm:h-[50px] w-[60px] h-[40px] object-cover rounded-[10px] cursor-pointer"
                   src="https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&q=60"
                   alt="Campaign Image"
                 />
               </div>
-              <div className="w-[30%] object-cover cursor-pointer flex justify-end items-center">
+              <div className="w-full sm:w-[30%] object-cover cursor-pointer flex justify-center sm:justify-end items-center mt-2 sm:mt-0">
                 <Link href={`/detail-blog/${slug}/list-photo`}>
-                  <span className="p-[10px] h-[50px] text-pink-600 font-medium flex justify-center items-center whitespace-nowrap rounded-[10px] border border-gray-300">
+                  <span className="p-[10px] h-[50px] text-pink-600 font-medium flex justify-center items-center whitespace-nowrap rounded-[10px] border border-gray-300 w-full sm:w-auto">
                     SEE MORE PHOTOS
                   </span>
                 </Link>
@@ -181,7 +181,7 @@ const DetailPage = () => {
             })()}
           </div>
         </div>
-        <div className="campaign-side w-[31%]">
+        <div className="campaign-side w-full max-w-full sm:w-[31%] sm:mt-0">
           <div className="w-full bg-white rounded-[10px] shadow p-[20px] ">
             <h3 className="text-[28px] font-medium mb-2 bg-gradient-to-l from-[#EDA774] to-[#EB008C] bg-clip-text text-transparent">
               ₫2,341,366,440 Raised
@@ -245,10 +245,12 @@ const DetailPage = () => {
 
             <div className="flex gap-3 mt-6">
               <div className="flex flex-col gap-3 w-full">
-                <button className="w-full cursor-pointer bg-[#EB008C] text-white font-semibold py-2 rounded-[8px] shadow transition duration-200 hover:bg-[#c20074] hover:scale-105 flex items-center justify-center gap-2">
-                  <GiSelfLove className="text-[20px]" />
-                  Please Donate
-                </button>
+                <Link href={`/detail-blog/${slug}/donate`}>
+                  <button className="w-full cursor-pointer bg-[#EB008C] text-white font-semibold py-2 rounded-[8px] shadow transition duration-200 hover:bg-[#c20074] hover:scale-105 flex items-center justify-center gap-2">
+                    <GiSelfLove className="text-[20px]" />
+                    Please Donate
+                  </button>
+                </Link>
                 <button className="w-full cursor-pointer bg-[#00b49b] text-white font-semibold py-2 rounded-[8px] shadow transition duration-200 hover:bg-[#008f7a] hover:scale-105 flex items-center justify-center gap-2">
                   <IoMdCopy className="text-[20px]" />
                   Copy Link Share

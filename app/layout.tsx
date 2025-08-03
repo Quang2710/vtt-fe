@@ -1,7 +1,7 @@
 import { Lexend_Deca } from "next/font/google";
 import "./globals.css";
-import Footer from "@/components/layout/footer";
 import DynamicHeader from "@/components/layout/dynamic-header";
+import DynamicFooter from "@/components/layout/dynamic-footer";
 const lexendDeca = Lexend_Deca({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"], // choose the weights you need
@@ -16,7 +16,7 @@ export const metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={lexendDeca.className}>
-      <body><DynamicHeader />{children}<Footer /></body>
+      <body><DynamicHeader />{children}<DynamicFooter /></body>
     </html>
   );
 }
