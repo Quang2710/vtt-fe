@@ -99,22 +99,22 @@ const Browse = () => {
   });
 
   return (
-    <div className="mx-[18%] p-[20px]">
-      <div className="personal w-full flex border-pink-600">
-        <div className="p-[10px] text-pink-600 font-bold border-pink-600">
+    <div className="w-full px-2 sm:px-4 md:px-8 lg:px-[10%] xl:px-[10%] py-4">
+      <div className="personal w-full flex border-pink-600 mb-2">
+        <div className="p-2 sm:p-[10px] text-pink-600 font-bold border-pink-600 text-base sm:text-lg">
           PERSONAL CAUSES
         </div>
       </div>
-      <div className="filter-container flex w-full p-[10px] mb-[25px]">
-        <div className="filter-categories w-full">
-          <label className="block text-[12px] font-medium text-[#999] mb-1">
+      <div className="filter-container flex flex-col sm:flex-row w-full gap-4 sm:gap-4 p-2 sm:p-[10px] mb-4 sm:mb-[25px]">
+        {/* <div className="filter-categories w-full mb-2 sm:mb-0">
+          <label className="block text-xs sm:text-[12px] font-medium text-[#999] mb-1">
             CATEGORIES
           </label>
-          <div className="flex gap-2 cursor-pointer h-[40px]">
+          <div className="flex flex-wrap gap-2 cursor-pointer min-h-[36px] sm:h-[40px]">
             {categoriesOptions.map((cat) => (
               <button
                 key={cat.key}
-                className={`px-3 py-1 rounded-[24px] transition-colors duration-150 border border-[#b4b4b4] cursor-pointer ${
+                className={`px-3 py-1 rounded-[24px] transition-colors duration-150 border border-[#b4b4b4] cursor-pointer text-xs sm:text-sm min-w-[80px] ${
                   filterObject.category === cat.key
                     ? "bg-pink-600 text-white"
                     : "bg-white text-gray-700"
@@ -127,8 +127,8 @@ const Browse = () => {
               </button>
             ))}
           </div>
-        </div>
-        <div className="filter-dropdown flex gap-2 w-full">
+        </div> */}
+        <div className="filter-dropdown flex justify-end items-end flex-row gap-2 sm:gap-2 w-full">
           <Dropdown
             label="STATUS"
             options={statusOptions}
@@ -143,25 +143,25 @@ const Browse = () => {
             selected={filterObject.sortBy}
             onSelect={(value) => setFilterObject({ ...filterObject, sortBy: value })}
           />
-          <Dropdown
+          {/* <Dropdown
             label="COUNTRY"
             options={contryOptions}
             selected={filterObject.country}
             onSelect={(value) =>
               setFilterObject({ ...filterObject, country: value })
             }
-          />
+          /> */}
         </div>
       </div>
-      <div className="content-container ">
-        <div className="flex flex-wrap items-stretch">
+      <div className="content-container w-full">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-2 sm:gap-4">
           {campaigns.map((cat) => (
             <Blog
               onClick={() => {
                 router.push(`/detail-blog/${cat.id}`);
               }}
               key={cat.id}
-              classes="basis-1/3 min-w-[240px] p-2 min-h-[420px] cursor-pointer"
+              classes="w-full min-w-[220px] md:min-w-[240px] p-2 min-h-[420px] cursor-pointer"
               item={cat}
             />
           ))}
