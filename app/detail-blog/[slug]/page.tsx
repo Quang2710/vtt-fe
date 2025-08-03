@@ -206,21 +206,21 @@ const DetailPage = () => {
             <div className="trending flex items-center rounded-[30px] my-4 border border-[#a0d8bd] bg-[#e5fff3] p-2 box-border">
               <div className="flex -space-x-3 mr-3 w-[30%] overflow-hidden">
                 <Image
-                  src="https://randomuser.me/api/portraits/men/32.jpg"
+                  src="https://randomuser.me/api/portraits/women/68.jpg"
                   alt="User 1"
                   width={32}
                   height={32}
                   className="rounded-full border-2 border-white"
                 />
                 <Image
-                  src="https://randomuser.me/api/portraits/women/44.jpg"
+                  src="https://randomuser.me/api/portraits/men/77.jpg"
                   alt="User 2"
                   width={32}
                   height={32}
                   className="rounded-full border-2 border-white"
                 />
                 <Image
-                  src="https://randomuser.me/api/portraits/men/65.jpg"
+                  src="https://randomuser.me/api/portraits/men/77.jpg"
                   alt="User 3"
                   width={32}
                   height={32}

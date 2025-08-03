@@ -12,17 +12,20 @@ const Header = () => {
         <div className="flex text-sm bg-[#F4F4F4] py-3 px-5 relative">
 
             {/* mobile menu */}
-            <button onClick={() => setIsOpen(true)} className="lg:hidden absolute top-1/2 transform -translate-y-1/2">
+            <button
+                aria-label="Open menu"
+                onClick={() => setIsOpen(true)}
+                className="lg:hidden absolute top-1/2 transform -translate-y-1/2"
+            >
                 <Menu size={24} className="text-gray-700" />
             </button>
-            {/* Side Drawer */}
             <div
                 className={`fixed top-0 left-0 h-full w-64 bg-white shadow-lg z-50 transform transition-transform duration-300 ${isOpen ? 'translate-x-0' : '-translate-x-full'
                     }`}
+                onClick={e => e.stopPropagation()} 
             >
-                {/* Menu Items */}
                 <div className="flex flex-col w-full gap-7 text-base p-4 text-gray">
-                    <SearchInput className="!w-full" /> 
+                    <SearchInput className="!w-full" />
                     <Link href={'/browse'}>
                         Browse
                     </Link>
@@ -30,25 +33,28 @@ const Header = () => {
                         Fundraise
                     </Link>
                     <hr />
-                    <Link href={'/'}>
+                    <Link href={'/trust-and-safety'}>
                         Trust & safety
                     </Link>
-                    <Link href={'/'}>
+                    <Link href={'/about'}>
                         About
                     </Link>
-                    <Link href={'/'}>
+                    <Link href={'/faq'}>
                         FAQ
                     </Link>
                     <hr />
-                    <Link href={'/login'}>Login</Link>
-                    <Link href={'/register'}>Register</Link>
+                    <Link href={'/login'}>
+                        Login
+                    </Link>
+                    <Link href={'/register'}>
+                        Register
+                    </Link>
                 </div>
             </div>
-
             {/* Backdrop */}
             {isOpen && (
                 <div
-                    className="fixed inset-0 bg-transparent bg-opacity-40 z-40"
+                    className="fixed inset-0 bg-black bg-opacity-40 z-40"
                     onClick={() => setIsOpen(false)}
                 ></div>
             )}
@@ -68,7 +74,7 @@ const Header = () => {
                 </Link>
             </div>
             <div className="hidden lg:flex justify-between w-[40%] items-center">
-                <Link href={'/'}>
+                <Link href={'/trust-and-safety'}>
                     Trust & safety
                 </Link>
                 <Link href={'/'}>
