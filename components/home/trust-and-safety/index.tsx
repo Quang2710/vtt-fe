@@ -38,7 +38,7 @@ const FundraisingStats = () => {
                         </div>
                     </div>
 
-                    <div className="bg-transparent border border-white/20 rounded-lg p-4 flex items-center gap-3 text-left">
+                    {/* <div className="bg-transparent border border-white/20 rounded-lg p-4 flex items-center gap-3 text-left">
                         <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center">
 
                             <Image src={'/trust-3.svg'} width={26} height={17} alt="" />
@@ -46,7 +46,7 @@ const FundraisingStats = () => {
                         <div>
                             <div className="text-sm">partnered with us</div>
                         </div>
-                    </div>
+                    </div> */}
                 </div>
             </div>
 

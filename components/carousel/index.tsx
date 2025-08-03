@@ -75,7 +75,10 @@ export default function CampaignCarousel() {
 
     return (
         <div className="relative lg:px-4 hero">
-            <div className="p-5 border rounded-[60px] absolute z-10 bg-white border-transparent left-1/2 transform -translate-x-1/2 top-[5%] w-[calc(100%_-_16px)] lg:w-2/3 flex gap-2.5 items-center" style={{ boxShadow: '0px 10px 30px rgba(0, 0, 0, .4);' }}>
+            <div
+                className="p-5 border rounded-[60px] absolute z-10 bg-white border-transparent left-1/2 transform -translate-x-1/2 top-[5%] w-[calc(100%_-_16px)] lg:w-2/3 flex gap-2.5 items-center"
+                style={{ boxShadow: '0px 10px 30px rgba(0, 0, 0, .4)' }}
+            >
                 <Image src={'https://res.cloudinary.com/dmajhtvmd/image/upload/assets/images/default_profile_images/default_profile_4.png'} width={36} height={36} alt="" className="h-full rounded-full" />
                 <div className="text-gray text-sm lg:text-base">
                     <span className="font-bold text-pink">dunghm</span> donated to <span className="font-bold text-pink">Don’t Let Cancer Take Away White’s Ear</span>
@@ -92,9 +95,9 @@ export default function CampaignCarousel() {
                     >
                         {/* Left Panel */}
                         <div className="w-full lg:w-1/2 bg-gradient-to-br from-[#021A4C] to-[#0A276B] text-white p-6 relative flex flex-col justify-center">
-                            <div className="absolute top-4 left-4 bg-red-600 text-xs font-bold text-white rounded-full px-2 py-1">
+                            {/* <div className="absolute top-4 left-4 bg-red-600 text-xs font-bold text-white rounded-full px-2 py-1">
                                 SG 60
-                            </div>
+                            </div> */}
 
                             <h3 className="text-2xl font-bold mb-4">{item.title}</h3>
                             <p className="mb-4">{item.description}</p>
