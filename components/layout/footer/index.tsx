@@ -48,7 +48,7 @@ const Footer = () => {
                 </div>
               </div>
             </div>
-            <div className="gap-4 w-full hidden lg:flex">
+            {/* <div className="gap-4 w-full hidden lg:flex">
               <Image
                 src={
                   "https://res.cloudinary.com/dmajhtvmd/image/upload/assets/images/home/footer/raise.webp"
@@ -68,7 +68,7 @@ const Footer = () => {
                   financial return.
                 </div>
               </div>
-            </div>
+            </div> */}
             <div className="gap-4 w-full hidden lg:flex">
               <Image
                 src={
