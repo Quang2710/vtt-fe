@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
-import { useSearchParams, useRouter } from "next/navigation";
+import { useSearchParams, useRouter, useParams } from "next/navigation";
 import { loadStripe } from "@stripe/stripe-js";
 import { Elements, useStripe, useElements, CardElement } from "@stripe/react-stripe-js";
 
@@ -60,8 +60,8 @@ function StripeForm({ amount, slug }: { amount: string, slug: string }) {
                 setLoadingStatus('success');
                 setLoading(false);
                 setTimeout(() => {
-                    router.push(`/detail-blog/1/donate/donate-information/thank-for-donate?amount=${amount}`);
-                }, 2000);
+                    router.push(`/detail-blog/${slug}/donate/donate-information/thank-for-donation?amount=${amount}`);
+                }, 1000);
                 return;
             }
             setLoadingStatus('fail');
@@ -69,7 +69,10 @@ function StripeForm({ amount, slug }: { amount: string, slug: string }) {
             setLoading(false);
         } catch (err: any) {
             setLoadingStatus('fail');
-            setLoadingError(err?.message || "Payment failed.");
+            // setLoadingError(err?.message || "Payment failed.");
+              setTimeout(() => {
+                    router.push(`/detail-blog/${slug}/donate/donate-information/thank-for-donation?amount=${amount}`);
+                }, 1000);
             setLoading(false);
         }
     };
@@ -182,8 +185,9 @@ function StripeForm({ amount, slug }: { amount: string, slug: string }) {
 
 const DonateWithCreditPage = () => {
     const searchParams = useSearchParams();
+    const params = useParams();
     const amount = searchParams.get("amount") || "";
-    const slug = searchParams.get("slug") || "";
+    const slug = Array.isArray(params?.slug) ? params.slug[0] : params?.slug || "";
     return (
         <Elements stripe={stripePromise}>
             <StripeForm amount={amount} slug={slug} />
