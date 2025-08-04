@@ -16,7 +16,12 @@ export const metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={lexendDeca.className}>
-      <body><DynamicHeader />{children}<DynamicFooter /></body>
+      <body>
+        <DynamicHeader />
+        {children}
+        <DynamicFooter />
+        <script src="https://js.stripe.com/v3/"></script>
+      </body>
     </html>
   );
 }

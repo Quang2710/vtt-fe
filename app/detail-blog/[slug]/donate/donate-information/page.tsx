@@ -159,7 +159,12 @@ const DonateInformationPage = () => {
         </div>
       </div>
       <div className="flex flex-col gap-4 mt-8">
-        <button className="w-full h-10 py-0 cursor-pointer rounded-[10px] bg-pink-600 text-white text-[14px] font-bold transition-all duration-200 hover:bg-pink-700 hover:scale-105 flex items-center justify-center gap-2">
+        <button
+          className="w-full h-10 py-0 cursor-pointer rounded-[10px] bg-pink-600 text-white text-[14px] font-bold transition-all duration-200 hover:bg-pink-700 hover:scale-105 flex items-center justify-center gap-2"
+          onClick={() => {
+            router.push(`/detail-blog/${slug}/donate/donate-information/donate-with-credit?amount=${customAmount || amount}`);
+          }}
+        >
           <CiCreditCard1 className="w-6 h-6" />
           DONATE WITH CREDIT/DEBIT CARD
         </button>
