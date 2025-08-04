@@ -77,7 +77,7 @@ const Header = () => {
                 <Link href={'/trust-and-safety'}>
                     Trust & safety
                 </Link>
-                <Link href={'/'}>
+                <Link href={'/about'}>
                     About
                 </Link>
                 <Link href={'/'}>
