@@ -117,7 +117,7 @@ const AboutPage = () => {
                         </div>
                     ))}
                 </div>
-                 <h2 className="my-[50px] text-[48px] font-bold text-black">The Give.Asia team</h2>
+                 <h2 className="my-[50px] text-[48px] font-bold text-black">Give.Asia advisors</h2>
                 <div className="flex flex-wrap justify-center gap-12 pt-[50px] pb-[100px]">
                     {[
                         {
