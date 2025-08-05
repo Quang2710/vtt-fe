@@ -9,10 +9,10 @@ const AboutPage = () => {
     const [advisors, setAdvisors] = useState([]);
 
     useEffect(() => {
-        fetcher("https://api.wtt.apidev.click/setting/about-teams")
+        fetcher("/setting/about-teams")
             .then((data) => setTeam(data))
             .catch((err) => setTeam([]));
-        fetcher("https://api.wtt.apidev.click/setting/about-advisors")
+        fetcher("/setting/about-advisors")
             .then((data) => setAdvisors(data))
             .catch((err) => setAdvisors([]));
     }, []);
