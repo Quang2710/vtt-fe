@@ -80,7 +80,7 @@ const Header = () => {
                 <Link href={'/about'}>
                     About
                 </Link>
-                <Link href={'/'}>
+                <Link href={'/faq'}>
                     FAQ
                 </Link>
                 <div className="w-px h-6 bg-black" />
