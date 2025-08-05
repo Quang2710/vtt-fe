@@ -36,7 +36,7 @@ const HelpFaqs: React.FC = () => {
 
 
   return (
-    <div className="faqs-container p-5 flex flex-col h-full">
+    <div className="faqs-container p-5 flex flex-col h-[92%]">
       <div className="font-bold text-xl mb-4">Popular Questions</div>
       <div
         className="flex-1 overflow-y-auto mb-4"

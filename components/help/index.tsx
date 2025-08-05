@@ -28,7 +28,7 @@ const HelpButton: React.FC = () => {
         className="w-14 h-14 rounded-full bg-[#4b3299] flex items-center justify-center shadow-lg hover:scale-105 transition-transform cursor-pointer text-white"
         style={{ boxShadow: "0 2px 12px rgba(0,0,0,0.15)" }}
       >
-        <GoQuestion className="text-white text-3xl" />
+        <GoQuestion className="text-white text-3xl cursor-pointer" style={{ pointerEvents: 'none' }} />
       </button>
       {showPopup && (
         <div
@@ -62,7 +62,7 @@ const HelpButton: React.FC = () => {
                   Contact us
                 </button>
               </div>
-              <div className="px-6 py-4" style={{ position: 'relative', height: '100%' }}>
+              <div className="px-6 pt-4" style={{ position: 'relative', height: '100%' }}>
                 <div
                   style={{ position: 'absolute', inset: 0, transition: 'opacity 0.3s, transform 0.3s', opacity: tab === 'faqs' ? 1 : 0, transform: tab === 'faqs' ? 'translateX(0)' : 'translateX(-24px)', pointerEvents: tab === 'faqs' ? 'auto' : 'none' }}
                 >
