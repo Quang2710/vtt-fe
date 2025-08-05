@@ -2,6 +2,7 @@ import { Lexend_Deca } from "next/font/google";
 import "./globals.css";
 import DynamicHeader from "@/components/layout/dynamic-header";
 import DynamicFooter from "@/components/layout/dynamic-footer";
+import HelpButton from "@/components/help";
 const lexendDeca = Lexend_Deca({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"], // choose the weights you need
@@ -20,6 +21,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <DynamicHeader />
         {children}
         <DynamicFooter />
+        <HelpButton />
       </body>
     </html>
   );
