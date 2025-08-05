@@ -99,7 +99,7 @@ const TrendingCampaigns = () => {
                 <Slider {...settings}>
                     {campaigns.map((c) => (
                         <div key={c.id} className="px-2">
-                            <div className="rounded-xl overflow-hidden bg-white shadow hover:shadow-lg transition">
+                            <div className="rounded-xl overflow-hidden bg-white shadow hover:shadow-lg transition cursor-pointer">
                                 <div className="relative w-full h-48">
                                     <Image
                                         src={c.image}
