@@ -20,7 +20,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <DynamicHeader />
         {children}
         <DynamicFooter />
-        <script src="https://js.stripe.com/v3/"></script>
       </body>
     </html>
   );

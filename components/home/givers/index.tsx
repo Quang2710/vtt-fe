@@ -1,103 +1,84 @@
-"use client";
-
+import React from "react";
 import Image from "next/image";
-import Slider from "react-slick";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
+import { useRouter } from "next/navigation";
 
-const people = [
-    {
-        id: 1,
-        name: "Đỗ Văn Lộng",
-        department: "donated 50$",
-        image: "https://res.cloudinary.com/dmajhtvmd/image/upload/c_scale/f_auto/dpr_auto/vvkkgdz5a84ejgmzboww",
-    },
-    {
-        id: 2,
-        name: "Đỗ Văn Lộng",
-        department: "donated 50$",
-        image: "https://res.cloudinary.com/dmajhtvmd/image/upload/c_scale/f_auto/dpr_auto/vvkkgdz5a84ejgmzboww",
-    },
-    {
-        id: 3,
-        name: "Đỗ Văn Lộng",
-        department: "donated 50$",
-        image: "https://res.cloudinary.com/dmajhtvmd/image/upload/c_scale/f_auto/dpr_auto/vvkkgdz5a84ejgmzboww",
-    },
-    {
-        id: 4,
-        name: "Đỗ Văn Lộng",
-        department: "donated 50$",
-        image: "https://res.cloudinary.com/dmajhtvmd/image/upload/c_scale/f_auto/dpr_auto/vvkkgdz5a84ejgmzboww",
-    },
-    {
-        id: 5,
-        name: "Đỗ Văn Lộng",
-        department: "donated 50$",
-        image: "https://res.cloudinary.com/dmajhtvmd/image/upload/c_scale/f_auto/dpr_auto/vvkkgdz5a84ejgmzboww",
-    },
+const members = [
+  {
+    id: 1,
+    name: "Nguyen Van A",
+    avatar: "https://randomuser.me/api/portraits/men/32.jpg",
+    profileUrl: "/profile/1"
+  },
+  {
+    id: 2,
+    name: "Tran Thi B",
+    avatar: "https://randomuser.me/api/portraits/women/44.jpg",
+    profileUrl: "/profile/2"
+  },
+  {
+    id: 3,
+    name: "Le Van C",
+    avatar: "https://randomuser.me/api/portraits/men/65.jpg",
+    profileUrl: "/profile/3"
+  },
+  {
+    id: 4,
+    name: "Pham Van D",
+    avatar: "https://randomuser.me/api/portraits/men/12.jpg",
+    profileUrl: "/profile/4"
+  },
+  {
+    id: 5,
+    name: "Nguyen Thi E",
+    avatar: "https://randomuser.me/api/portraits/women/55.jpg",
+    profileUrl: "/profile/5"
+  }
 ];
 
-const Givers = () => {
-    const settings = {
-        dots: false,
-        arrows: false,
-        infinite: true,
-        speed: 500,
-        slidesToShow: 4,
-        slidesToScroll: 1,
-        swipeToSlide: true,
-        autoPlay: true,
-        responsive: [
-            {
-                breakpoint: 1280,
-                settings: { slidesToShow: 3 },
-            },
-            {
-                breakpoint: 1024,
-                settings: { slidesToShow: 2 },
-            },
-            {
-                breakpoint: 640,
-                settings: { slidesToShow: 1 },
-            },
-        ],
-    };
+export default function MeetOurGivers() {
+  const router = useRouter();
 
-    return (
-        <section className="bg-white py-12 px-4">
-            <div className="max-w-7xl mx-auto mb-6">
-                <h2 className="text-2xl font-bold text-black mb-4 pl-3">
-                    Meet our givers
-                </h2>
-
-                <Slider {...settings}>
-                    {people.map((person) => (
-                        <div key={person.id} className="px-2">
-                            <div className="bg-white rounded-xl overflow-hidden shadow-md relative">
-                                <div className="relative w-full h-[380px] overflow-hidden group">
-                                    <Image
-                                        src={person.image}
-                                        alt={person.name}
-                                        fill
-                                        className="object-cover transition-transform duration-500 ease-in-out group-hover:scale-105"
-                                    />
-                                </div>
-
-
-                                <div className="absolute bottom-4 left-4 right-4 text-white">
-                                    <div className="bg-red-600 inline-block px-4 py-1 rounded-full text-sm font-bold mb-1">
-                                        {person.name}
-                                    </div>
-                                    <p className="text-sm drop-shadow">{person.department}</p>
-                                </div>
-                            </div>
-                        </div>
-                    ))}
-                </Slider>
+  return (
+    <div className="w-full flex flex-col items-center py-12 bg-gradient-to-br from-[#00b49b] via-[#f9fafc] to-[#fceabb]">
+      <h2 className="text-5xl font-extrabold mb-10 text-transparent bg-clip-text bg-gradient-to-r from-pink-500 via-yellow-400 to-blue-500 drop-shadow-2xl animate-fade-in">Meet our givers</h2>
+      <div className="flex gap-12 flex-wrap justify-center">
+        {members.map((member) => (
+          <div
+            key={member.id}
+            className="flex flex-col items-center cursor-pointer bg-white/70 backdrop-blur-lg rounded-3xl shadow-2xl px-10 py-8 transition-transform hover:-translate-y-3 hover:scale-105 hover:shadow-pink-200 relative group animate-fade-in"
+            onClick={() => router.push(member.profileUrl)}
+            style={{ minWidth: 200 }}
+          >
+            <div className="relative mb-2">
+              <div className="absolute inset-0 rounded-full blur-lg opacity-60 z-0 bg-pink-400 animate-glow"></div>
+              <Image
+                src={member.avatar}
+                alt={member.name}
+                width={110}
+                height={110}
+                className="rounded-full border-4 border-pink-400 group-hover:border-yellow-400 shadow-xl object-cover transition-all duration-300 group-hover:scale-110 relative z-10"
+              />
             </div>
-        </section>
-    );
-};
-
-export default Givers;
+            <div className="mt-4 text-xl font-bold text-[#222] group-hover:text-pink-500 transition-colors duration-200 text-center drop-shadow-md">{member.name}</div>
+          </div>
+        ))}
+      </div>
+      <style jsx>{`
+        .animate-fade-in {
+          animation: fadeIn 0.8s ease;
+        }
+        @keyframes fadeIn {
+          from { opacity: 0; transform: translateY(20px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-glow {
+          animation: glow 2s infinite alternate;
+        }
+        @keyframes glow {
+          from { opacity: 0.4; }
+          to { opacity: 0.9; }
+        }
+      `}</style>
+    </div>
+  );
+}
