@@ -3,100 +3,86 @@ import Blog from "@/components/blog";
 import Dropdown from "@/components/dropdown";
 import { div } from "framer-motion/client";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { fetcher } from "@/libs/fetcher";
 
-const campaigns = [
-  {
-    id: 1,
-    title: "From a Mother’s Heart: Help Leticia Fight for Her Life Elisabeth Macpal",
-    author: "Henry Pascal",
-    verified: true,
-    raised: "₫6,349,295,031",
-    goal: "₫6,926,988,281",
-    percent: 91.65,
-    description:
-      "From a Mother’s Heart: Help Leticia Fight for Her Life My name is Elisabeth Macpal, and I am the mother of a beautiful little girl named Leticia Briella Magaline. She is just 1 yea...",
-    image:
-      "https://res.cloudinary.com/dmajhtvmd/image/upload/w_1200,h_630,c_fill,g_faces/q_auto/psj9wecittjtc3axwcum.jpg",
-  },
-  {
-    id: 2,
-    title: "Help Us Bring Our Father Home After a Sudden Stroke Abroad",
-    author: "Aileen Koh",
-    verified: true,
-    raised: "₫1,199,175,690",
-    goal: "₫1,471,218,750",
-    percent: 81.54,
-    description:
-      "Help Us Bring Our Father Home After a Sudden Stroke Abroad On 27 June, I took my 89-year-old father on a short trip to Johor Bahru. It was meant to be a simple getaway of rest & re...",
-    image:
-      "https://res.cloudinary.com/dmajhtvmd/image/upload/w_1200,h_630,c_fill,g_faces/q_auto/vgjgd7c26c9uojiwrdyu.jpg",
-  },
-  {
-    id: 3,
-    title: "Two Tiny Fighters: Ethan and Evan’s Battle for Survival",
-    author: "Louis Gan",
-    verified: true,
-    raised: "₫1,506,952,405",
-    goal: "₫2,349,863,281",
-    percent: 64.12,
-    description:
-      "Two Tiny Fighters: Extremely Premature Twins Ethan and Evan’s Battle for Survival Hi, my name is Louis. I’m a technician working in a pharmaceutical company, and my wife, Juliana, ...",
-    image:
-      "https://res.cloudinary.com/dmajhtvmd/image/upload/w_1200,h_630,c_fill,g_faces/q_auto/nqwn1x8wyqqoq1yjkvhk.jpg",
-  },
-  {
-    id: 4,
-    title: "Two Tiny Fighters: Ethan and Evan’s Battle for Survival",
-    author: "Louis Gan",
-    verified: true,
-    raised: "₫1,506,952,405",
-    goal: "₫2,349,863,281",
-    percent: 64.12,
-    description:
-      "Two Tiny Fighters: Extremely Premature Twins Ethan and Evan’s Battle for Survival Hi, my name is Louis. I’m a technician working in a pharmaceutical company, and my wife, Juliana, ...",
-    image:
-      "https://res.cloudinary.com/dmajhtvmd/image/upload/w_1200,h_630,c_fill,g_faces/q_auto/nqwn1x8wyqqoq1yjkvhk.jpg",
-  },
-];
-
-const categoriesOptions = [
-  { key: "all", label: "All" },
-  { key: "animals", label: "Animals" },
-  { key: "education", label: "Education" },
-  { key: "medical", label: "Medical" },
-];
+type Campaign = {
+  id: number;
+  name: string;
+  description: string;
+  image: string;
+};
 
 const statusOptions = [
-  { key: "onGoing", label: "Ongoing" },
-  { key: "almostThere", label: "Almost there" },
+  { key: "ongoing", label: "Ongoing" },
+  { key: "almost", label: "Almost there" },
   { key: "finished", label: "Finished" },
-  { key: "endingSoon", label: "Ending Soon" },
+  { key: "ending_soon", label: "Ending Soon" },
 ];
 const sortByOptions = [
   { key: "trending", label: "Trending" },
   { key: "newest", label: "Newest" },
-  { key: "lastUpdate", label: "Last Update" },
+  { key: "last_update", label: "Last Update" },
 ];
-const contryOptions = [
-  { key: "all", label: "All" },
-  { key: "china", label: "China" },
-  { key: "hongKong", label: "Hong Kong" },
-  { key: "indonesia", label: "Indonesia" },
-  { key: "japan", label: "Japan" },
-  { key: "malaysia", label: "Malaysia" },
-  { key: "singapore", label: "Singapore" },
-  { key: "thailand", label: "Thailand" },
-  { key: "vietnam", label: "Vietnam" },
-];
+
 const Browse = () => {
   const router = useRouter();
   const [filterObject, setFilterObject] = useState<any>({
     category: "all",
-    sortBy: null,
-    status: null,
+    sortBy: "trending",
+    status: "ongoing",
     country: null,
   });
+  const [campaigns, setCampaigns] = useState<Campaign[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [page, setPage] = useState(1);
+  const [totalItem, setTotalItem] = useState(0);
+  const [isFetchingMore, setIsFetchingMore] = useState(false);
+
+  useEffect(() => {
+    setLoading(true);
+    setError(null);
+    setPage(1);
+    const filterParam = filterObject.status ? `&filter=${filterObject.status}` : "";
+    const sortParam = filterObject.sortBy ? `&sort=${filterObject.sortBy}` : "";
+    fetcher(`/setting/browser?page=1&pageSize=6${filterParam}${sortParam}`)
+      .then((res) => {
+        setCampaigns(res.data || []);
+        setTotalItem(res.meta?.totalItem || 0);
+        setLoading(false);
+      })
+      .catch(() => {
+        setError("Error loading campaigns");
+        setLoading(false);
+      });
+  }, [filterObject.status, filterObject.sortBy]);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (
+        window.innerHeight + window.scrollY >= document.body.offsetHeight - 200 &&
+        !isFetchingMore &&
+        campaigns.length < totalItem
+      ) {
+        setIsFetchingMore(true);
+        const nextPage = page + 1;
+        const filterParam = filterObject.status ? `&filter=${filterObject.status}` : "";
+        const sortParam = filterObject.sortBy ? `&sort=${filterObject.sortBy}` : "";
+        fetcher(`/setting/browser?page=${nextPage}&pageSize=6${filterParam}${sortParam}`)
+          .then((res) => {
+            setCampaigns((prev) => [...prev, ...(res.data || [])]);
+            setPage(nextPage);
+            setIsFetchingMore(false);
+          })
+          .catch(() => {
+            setIsFetchingMore(false);
+          });
+      }
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [campaigns, totalItem, page, isFetchingMore, filterObject.status, filterObject.sortBy]);
 
   return (
     <div className="w-full px-2 sm:px-4 md:px-8 lg:px-[10%] xl:px-[10%] py-4">
@@ -106,28 +92,6 @@ const Browse = () => {
         </div>
       </div>
       <div className="filter-container flex flex-col sm:flex-row w-full gap-4 sm:gap-4 p-2 sm:p-[10px] mb-4 sm:mb-[25px]">
-        {/* <div className="filter-categories w-full mb-2 sm:mb-0">
-          <label className="block text-xs sm:text-[12px] font-medium text-[#999] mb-1">
-            CATEGORIES
-          </label>
-          <div className="flex flex-wrap gap-2 cursor-pointer min-h-[36px] sm:h-[40px]">
-            {categoriesOptions.map((cat) => (
-              <button
-                key={cat.key}
-                className={`px-3 py-1 rounded-[24px] transition-colors duration-150 border border-[#b4b4b4] cursor-pointer text-xs sm:text-sm min-w-[80px] ${
-                  filterObject.category === cat.key
-                    ? "bg-pink-600 text-white"
-                    : "bg-white text-gray-700"
-                }`}
-                onClick={() =>
-                  setFilterObject({ ...filterObject, category: cat.key })
-                }
-              >
-                {cat.label}
-              </button>
-            ))}
-          </div>
-        </div> */}
         <div className="filter-dropdown flex justify-end items-end flex-row gap-2 sm:gap-2 w-full">
           <Dropdown
             label="STATUS"
@@ -143,29 +107,43 @@ const Browse = () => {
             selected={filterObject.sortBy}
             onSelect={(value) => setFilterObject({ ...filterObject, sortBy: value })}
           />
-          {/* <Dropdown
-            label="COUNTRY"
-            options={contryOptions}
-            selected={filterObject.country}
-            onSelect={(value) =>
-              setFilterObject({ ...filterObject, country: value })
-            }
-          /> */}
         </div>
       </div>
       <div className="content-container w-full">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-2 sm:gap-4">
-          {campaigns.map((cat) => (
-            <Blog
-              onClick={() => {
-                router.push(`/detail-blog/${cat.id}`);
-              }}
-              key={cat.id}
-              classes="w-full min-w-[220px] md:min-w-[240px] p-2 min-h-[420px] cursor-pointer"
-              item={cat}
-            />
-          ))}
-        </div>
+        {loading ? (
+          <div className="text-center py-10 text-gray-500">Loading...</div>
+        ) : error ? (
+          <div className="text-center py-10 text-red-500">{error}</div>
+        ) : campaigns.length === 0 ? (
+          <div className="flex flex-col items-center justify-center py-16 text-gray-400">
+            <svg width="64" height="64" fill="none" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="32" cy="32" r="32" fill="#F3F3F3"/>
+              <path d="M32 20v16" stroke="#B4B4B4" strokeWidth="2" strokeLinecap="round"/>
+              <circle cx="32" cy="44" r="2" fill="#B4B4B4"/>
+            </svg>
+            <div className="mt-4 text-lg font-semibold">No campaigns found</div>
+            <div className="mt-2 text-sm">Try changing your filter or check back later.</div>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-2 sm:gap-4">
+            {campaigns.map((cat, idx) => (
+              <Blog
+                onClick={() => {
+                  router.push(`/detail-blog/${cat.id}`);
+                }}
+                key={`${cat.id}-${idx}`}
+                classes="w-full min-w-[220px] md:min-w-[240px] p-2 min-h-[420px] cursor-pointer"
+                item={{
+                  ...cat,
+                  title: cat.name,
+                }}
+              />
+            ))}
+          </div>
+        )}
+        {isFetchingMore && (
+          <div className="text-center py-4 text-gray-500">Loading more...</div>
+        )}
       </div>
     </div>
   );
