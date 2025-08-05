@@ -53,6 +53,11 @@ export default function AuthTabs() {
         body: JSON.stringify(values),
       });
       console.log("res", res);
+      // Giả sử token trả về là res.token hoặc res.data.token
+      const token = res.token || (res.data && res.data.token);
+      if (token) {
+        document.cookie = `token=${token}; path=/; max-age=604800`; // lưu 7 ngày
+      }
     } catch (err: any) {
       setApiError(err.message || "Unexpected error");
     }
