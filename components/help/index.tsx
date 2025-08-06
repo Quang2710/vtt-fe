@@ -1,14 +1,24 @@
 'use client';
 import React, { useState } from "react";
+import { usePathname } from "next/navigation";
 import { GoQuestion } from "react-icons/go";
 import HelpFaqs from "./HelpFaqs";
 import HelpContact from "./HelpContact";
 
+const HIDDEN_PATHS = [
+  "/login",
+  "/register",
+  "/faq",
+];
+
 const HelpButton: React.FC = () => {
+  const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const [tab, setTab] = useState<'faqs' | 'contact'>('faqs');
   const [showPopup, setShowPopup] = useState(false);
   const [visible, setVisible] = useState(false);
+
+  if (HIDDEN_PATHS.some(path => pathname.startsWith(path))) return null;
 
   React.useEffect(() => {
     if (open) {
