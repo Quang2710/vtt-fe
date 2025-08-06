@@ -56,7 +56,7 @@ export default function HeaderFaq() {
       <AnimatePresence>
         {showContact && (
           <motion.div
-            className="fixed bottom-6 right-6 z-50 bg-white shadow-lg rounded-lg p-4 w-[360px]"
+            className="fixed bottom-[88px] right-6 z-50 bg-white shadow-lg rounded-lg p-4 w-[360px]"
             initial={{ opacity: 0, scale: 0.8, y: 40 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.8, y: 40 }}
