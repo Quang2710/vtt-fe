@@ -7,9 +7,11 @@ import { FaFacebookF, FaGoogle } from "react-icons/fa";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { loginSchema, registerSchema } from "@/libs/validation-schema";
 import { fetcher } from "@/libs/fetcher";
+import { useRouter } from "next/navigation";
 
 export default function AuthTabs() {
   const pathname = usePathname();
+  const router = useRouter();
   const [activeTab, setActiveTab] = useState<"login" | "register" | string>(
     pathname.replace("/", "") ?? "login"
   );
@@ -31,13 +33,16 @@ export default function AuthTabs() {
   const handleSubmitRegister = async (values: any) => {
     setApiError("");
     try {
-      console.log("values", values);
       const res = await fetcher(`/auth/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(values),
       });
-      console.log("res", res);
+      const token = res.token || (res.data && res.data.token);
+      if (token) {
+        document.cookie = `token=${token}; path=/; max-age=604800`;
+        window.location.href = "/";
+      }
     } catch (err: any) {
       setApiError(err.message || "Unexpected error");
     }
@@ -46,17 +51,15 @@ export default function AuthTabs() {
   const handleSubmitLogin = async (values: any) => {
     setApiError("");
     try {
-      console.log("values", values);
       const res = await fetcher(`/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(values),
       });
-      console.log("res", res);
-      // Giả sử token trả về là res.token hoặc res.data.token
       const token = res.token || (res.data && res.data.token);
       if (token) {
-        document.cookie = `token=${token}; path=/; max-age=604800`; // lưu 7 ngày
+        document.cookie = `token=${token}; path=/; max-age=604800`;
+       window.location.href = "/";
       }
     } catch (err: any) {
       setApiError(err.message || "Unexpected error");

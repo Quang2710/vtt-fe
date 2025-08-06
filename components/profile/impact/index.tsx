@@ -29,8 +29,14 @@ const Impact = () => {
                         </div>
                     </div>
                     <div className="flex gap-6 overflow-auto custom-scroll">
-                        {Array.from({ length: 6 }).map(item => (
-                            <Image src={'https://res.cloudinary.com/dmajhtvmd/image/upload/assets/images/movement/badges/common-care-badge_2x.png'} width={124} height={124} alt="" />
+                        {Array.from({ length: 6 }).map((_, idx) => (
+                            <Image
+                                key={idx}
+                                src={'https://res.cloudinary.com/dmajhtvmd/image/upload/assets/images/movement/badges/common-care-badge_2x.png'}
+                                width={124}
+                                height={124}
+                                alt=""
+                            />
                         ))}
                     </div>
                 </div>

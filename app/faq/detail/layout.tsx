@@ -24,7 +24,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     return (
         <div className="w-full min-h-screen bg-[#f7f7fa]">
             <div
-                className="min-h-screen flex bg-[#f7f7fa]"
+                className="min-h-screen flex bg-white"
                 style={{ maxWidth: 1080, margin: '0 auto', position: 'relative', paddingRight: 20, paddingLeft: 20 }}
             >
                 <aside className="w-48 flex flex-col gap-2 py-6 pr-4 border-r border-[#ede9f7] bg-transparent">

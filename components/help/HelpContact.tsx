@@ -5,28 +5,41 @@ const HelpContact: React.FC = () => {
     name: "",
     subject: "",
     email: "",
-    message: ""
+    content: ""
   });
   const [sending, setSending] = useState(false);
   const [sent, setSent] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSending(true);
-    setTimeout(() => {
-      setSending(false);
+    setError(null);
+    setSent(false);
+
+    try {
+      const res = await fetch("https://api.wtt.apidev.click/setting/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+      if (!res.ok) throw new Error("Send failed");
       setSent(true);
-      setForm({ name: "", subject: "", email: "", message: "" });
-    }, 1200);
+      setForm({ name: "", subject: "", email: "", content: "" });
+    } catch (err) {
+      setError("Could not send. Please try again.");
+    } finally {
+      setSending(false);
+    }
   };
 
   return (
     <div className="contact-container p-5 flex flex-col items-center">
-      <div className="flex flex-col items-center bg-gradient-to-br from-[#f7f7fa] via-[#ede9f7] to-[#e5e7eb] rounded-xl shadow-sm py-3 px-4 w-full max-w-[360px] mb-2">
+      <div className="flex flex-col items-center bg-gradient-to-br from-[#f7f7fa] via-[#ede9f7] to-[#e5e7eb] rounded-xl shadow-sm py-3 px-4 w-full max-w-[340px] mb-2">
         <div className="relative mb-2">
           <img
             src="/avatar.jpg"
@@ -38,7 +51,7 @@ const HelpContact: React.FC = () => {
         <div className="font-bold text-lg text-[#4b3299] leading-tight mb-1">How can we help?</div>
         <div className="text-xs text-[#888] mb-1">We usually respond in a few hours</div>
       </div>
-      <form className="flex flex-col gap-2 w-full max-w-[360px]" onSubmit={handleSubmit}>
+      <form className="flex flex-col gap-2 w-full max-w-[340px]" onSubmit={handleSubmit}>
         <label htmlFor="contact-name" className="text-sm font-medium text-[#4b3299] mb-1">Name</label>
         <input
           id="contact-name"
@@ -72,11 +85,11 @@ const HelpContact: React.FC = () => {
           className="px-4 py-2 border border-[#e5e7eb] rounded-lg bg-[#f7f7f7] text-base focus:outline-none focus:border-[#4b3299]"
           required
         />
-        <label htmlFor="contact-message" className="text-sm font-medium text-[#4b3299] mb-1">How can we help?</label>
+        <label htmlFor="contact-content" className="text-sm font-medium text-[#4b3299] mb-1">How can we help?</label>
         <textarea
-          id="contact-message"
-          name="message"
-          value={form.message}
+          id="contact-content"
+          name="content"
+          value={form.content}
           onChange={handleChange}
           placeholder="Describe your issue or question..."
           className="px-4 py-2 border border-[#e5e7eb] rounded-lg bg-[#f7f7f7] text-base focus:outline-none focus:border-[#4b3299] resize-none min-h-[80px]"
@@ -91,6 +104,7 @@ const HelpContact: React.FC = () => {
             {sending ? "Sending..." : "Send a message"}
           </button>
         </div>
+        {error && <div className="text-red-600 text-sm mt-2">{error}</div>}
         {sent && <div className="text-green-600 text-sm mt-2">Your message has been sent!</div>}
       </form>
     </div>
