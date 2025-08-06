@@ -7,12 +7,19 @@ import { fetcher } from "@/libs/fetcher";
 
 const FAQPage: React.FC = () => {
     const [categories, setCategories] = React.useState<Array<{id:number;name:string;image:string;}>>([]);
-    React.useEffect(() => {
+    const [search, setSearch] = useState("");
+    const router = useRouter();
+
+    useEffect(() => {
         fetcher("/setting/fag-category")
             .then((data) => setCategories(data))
             .catch(() => setCategories([]));
     }, []);
-    const router = useRouter();
+
+    const filteredCategories = categories.filter(cat =>
+        cat.name.toLowerCase().includes(search.trim().toLowerCase())
+    );
+
     return (
         <div className="flex flex-col bg-[#f7f7fa]" style={{ minHeight: 'calc(100vh - 62px)' }}>
             <div className="w-full relative flex items-center justify-center" style={{ height: '300px' }}>
@@ -31,6 +38,8 @@ const FAQPage: React.FC = () => {
                             <input
                                 type="text"
                                 placeholder="Search our help center..."
+                                value={search}
+                                onChange={e => setSearch(e.target.value)}
                                 className="w-full pl-12 pr-16 py-4 bg-white text-lg shadow-xl border border-[#d1d5db] focus:outline-none focus:border-[#7c3aed] transition-all duration-200 text-[#4b3299] placeholder-[#a3a3a3]"
                                 style={{ boxSizing: 'border-box', fontSize: '18px', borderRadius: '10px', fontWeight: 500 }}
                             />
@@ -38,6 +47,11 @@ const FAQPage: React.FC = () => {
                                 type="button"
                                 className="cursor-pointer absolute right-2 top-1/2 -translate-y-1/2 bg-gradient-to-r from-[#7c3aed] to-[#4b3299] hover:from-[#4b3299] hover:to-[#7c3aed] text-white rounded-[10px] px-3 py-2 flex items-center justify-center shadow-lg transition-all duration-200 border border-[#ede9f7]"
                                 style={{ height: '40px', minWidth: '40px' }}
+                                onClick={() => {
+                                    if (filteredCategories.length === 1) {
+                                        router.push(`/faq/detail/${encodeURIComponent(filteredCategories[0].name)}`);
+                                    }
+                                }}
                             >
                                 <RiChatSearchLine size={22}/>
                             </button>
@@ -48,7 +62,7 @@ const FAQPage: React.FC = () => {
 
             <main className="flex-1 flex flex-col justify-center">
                 <div className="flex flex-col md:flex-row gap-8 px-6 py-10 max-w-7xl mx-auto w-full">
-                    {categories.map((cat) => (
+                    {filteredCategories.map((cat) => (
                         <div
                             key={cat.id}
                             className="cursor-pointer flex-1 bg-white rounded-xl p-6 transition-transform duration-300 ease-in-out hover:scale-105 hover:shadow-2xl flex flex-col items-center justify-center"
@@ -71,6 +85,11 @@ const FAQPage: React.FC = () => {
                             )}
                         </div>
                     ))}
+                    {filteredCategories.length === 0 && (
+                        <div className="w-full text-center text-[#b3b3b3] text-lg py-12">
+                            No category found.
+                        </div>
+                    )}
                 </div>
             </main>
             <footer className="w-full py-6 bg-[#ede9f7] flex justify-center items-center border-t border-[#e5e7eb] mt-auto">
