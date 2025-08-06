@@ -56,6 +56,7 @@ export default function DonationTable() {
           total={totalPages}
           page={page}
           onChange={setPage}
+          showControls
           color="danger"
         />
       </div>

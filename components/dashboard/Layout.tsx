@@ -5,6 +5,7 @@ import { ReactNode, use, useState } from "react";
 import DonationAmountCard from "./contents/statistics/donation-amount";
 import Statistics from "./contents/statistics";
 import ViewDonation from "./contents/view-donation";
+import CampaignEditPage from "./contents/edit";
 
 export default function DashboardLayout({ children }: { children: ReactNode }) {
   const [selected, setSelected] = useState("statistics");
@@ -14,6 +15,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
       <main className="w-full">
         {selected === "statistics" && <Statistics />}
         {selected === "view-donations" && <ViewDonation />}
+        {selected === "edit" && <CampaignEditPage />}
       </main>
     </div>
   );

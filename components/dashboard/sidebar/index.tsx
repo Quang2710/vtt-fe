@@ -17,7 +17,7 @@ export default function Sidebar({
       <nav className="space-y-4">
         {/* Campaign Overview Section */}
         <div className="flex flex-col border-b pb-8 border-gray-200 gap-4">
-          <h4 className="pl-2 font-semibold text-md text-gray-400">
+          <h4 className="pl-2 font-semibold text-sm text-gray-400">
             Campaign Analytics
           </h4>
           <ul className="space-y-1 flex flex-col gap-4 pl-2">
@@ -46,11 +46,18 @@ export default function Sidebar({
 
         {/* Campaign Management Section */}
         <div className=" flex flex-col border-gray-200 gap-4 pt-4">
-          <h4 className="text-md space-y-1 pl-2 font-semibold text-gray-400">
+          <h4 className="text-sm space-y-1 pl-2 font-semibold text-gray-400">
             Campaign Management
           </h4>
           <ul className=" flex flex-col gap-4 space-y-1 pl-2">
-            <li className="text-gray-600 hover:text-black cursor-pointer">
+            <li
+              className={`cursor-pointer ${
+                selected === "edit"
+                  ? "text-black font-semibold"
+                  : "text-gray-600 hover:text-black"
+              }`}
+              onClick={() => onSelect("edit")}
+            >
               Edit
             </li>
             <li className="text-gray-600 hover:text-black cursor-pointer">
