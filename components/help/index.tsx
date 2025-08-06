@@ -1,5 +1,5 @@
 'use client';
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
 import { GoQuestion } from "react-icons/go";
 import HelpFaqs from "./HelpFaqs";
@@ -18,9 +18,7 @@ const HelpButton: React.FC = () => {
   const [showPopup, setShowPopup] = useState(false);
   const [visible, setVisible] = useState(false);
 
-  if (HIDDEN_PATHS.some(path => pathname.startsWith(path))) return null;
-
-  React.useEffect(() => {
+  useEffect(() => {
     if (open) {
       setShowPopup(true);
       setTimeout(() => setVisible(true), 10); 
@@ -30,6 +28,8 @@ const HelpButton: React.FC = () => {
       return () => clearTimeout(timeout);
     }
   }, [open]);
+
+  if (HIDDEN_PATHS.some(path => pathname.startsWith(path))) return null;
 
   return (
     <div style={{ position: "fixed", bottom: 32, right: 32, zIndex: 50 }}>
