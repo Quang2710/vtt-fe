@@ -60,10 +60,24 @@ export default function Sidebar({
             >
               Edit
             </li>
-            <li className="text-gray-600 hover:text-black cursor-pointer">
+            <li
+              className={`cursor-pointer ${
+                selected === "thankyou-message"
+                  ? "text-black font-semibold"
+                  : "text-gray-600 hover:text-black"
+              }`}
+              onClick={() => onSelect("thankyou-message")}
+            >
               Thank you message
             </li>
-            <li className="text-gray-600 hover:text-black cursor-pointer">
+            <li
+              className={`cursor-pointer ${
+                selected === "share"
+                  ? "text-black font-semibold"
+                  : "text-gray-600 hover:text-black"
+              }`}
+              onClick={() => onSelect("share")}
+            >
               Share
             </li>
             <li className="text-gray-600 hover:text-black cursor-pointer">

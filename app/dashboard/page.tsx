@@ -3,7 +3,7 @@ import Statistics from "@/components/dashboard/contents/statistics/index";
 
 export default function DashboardPage() {
   return (
-    <div className="md:px-[10vw]">
+    <div className="md:px-[7vw]">
       {" "}
       <DashboardLayout>
         <Statistics />
