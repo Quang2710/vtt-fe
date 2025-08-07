@@ -6,11 +6,13 @@ import SearchInput from "../search-input";
 import { useEffect, useState } from "react";
 import { Menu } from "lucide-react";
 import Cookies from "js-cookie"; 
+import { useUserStore } from "@/stores/userStore";
 
 const Header = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [token, setToken] = useState<string | undefined>(undefined);
     const [showMenu, setShowMenu] = useState(false);
+    const user = useUserStore((state:any) => state.user);
 
     useEffect(() => {
         const cookieToken = Cookies.get("token");
@@ -98,7 +100,7 @@ const Header = () => {
                             onClick={() => setShowMenu((v) => !v)}
                         >
                             <img
-                                src="/avatar.jpg"
+                                src={user?.avatar_id ? user.avatar_id : "/avatar.jpg"}
                                 alt="avatar"
                                 className="w-8 h-8 rounded-full border border-[#e5e7eb] object-cover"
                             />
