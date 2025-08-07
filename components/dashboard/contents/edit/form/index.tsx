@@ -1,10 +1,14 @@
 "use client";
-
+import React, { useState } from "react";
 import {
   Button,
   Chip,
   Divider,
   Input,
+  Modal,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
   NumberInput,
   Select,
   SelectItem,
@@ -16,21 +20,42 @@ import CampaignImageSection from "./campaign-image-uploader";
 import TextEditor from "./text-editor";
 import ShortUrlSection from "./short-URL";
 import PinkButton from "@/components/layout/button";
+import PinkButtonWidth from "@/components/layout/button/w-limit";
+import WithdrawalModal from "./withdrawal-modal";
 
-export default function CampaignEditForm() {
+interface CampaignEditFormProps {
+  setIsModalOpen: (open: boolean) => void;
+}
+
+export default function CampaignEditForm({
+  setIsModalOpen,
+}: CampaignEditFormProps) {
   return (
     <div className="space-y-5">
-      <div className="flex justify-start flex-col items-start">
-        <span className="text-xs text-gray-400">Campaign status</span>
-        <Chip
-          variant="light"
-          color="warning"
-          className="-ml-2"
-          startContent={<StatusDot size={18} />}
-          size="lg"
-        >
-          Pending
-        </Chip>
+      <div className="flex justify-between gap-4 flex-col md:flex-row">
+        <div className="flex justify-start flex-col items-start">
+          {" "}
+          <span className="text-xs text-gray-400">Campaign status</span>
+          <Chip
+            variant="light"
+            className="-ml-2 text-[#efa96d] "
+            startContent={<StatusDot color="#efa96d " size={18} />}
+            size="lg"
+          >
+            Pending
+          </Chip>
+        </div>
+        <div className="flex justify-center gap-2 flex-col md:flex-row items-center">
+          <div className="whitespace-nowrap w-full min-w-[180px]">
+            <PinkButton onClick={() => setIsModalOpen(true)}>
+              Withdrawal request
+            </PinkButton>
+          </div>
+          <div className="whitespace-nowrap w-full min-w-[80px]">
+            {" "}
+            <PinkButton>End it</PinkButton>
+          </div>
+        </div>
       </div>
 
       <Divider />

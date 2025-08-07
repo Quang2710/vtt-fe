@@ -3,9 +3,15 @@ import PinkButtonWidth from "@/components/layout/button/w-limit";
 import { Button } from "@heroui/react";
 import Image from "next/image";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 export default function VideoSection() {
   const [showVideo, setShowVideo] = useState(false);
+  const router = useRouter();
+
+  const handleRecordVideo = () => {
+    router.push("/dashboard/record-thank-video");
+  };
 
   return (
     <div className="space-y-3">
@@ -69,7 +75,9 @@ export default function VideoSection() {
       )}
 
       <div className="flex justify-end items-end">
-        <PinkButtonWidth>RECORD VIDEO</PinkButtonWidth>
+        <PinkButtonWidth onClick={handleRecordVideo}>
+          RECORD VIDEO
+        </PinkButtonWidth>
       </div>
     </div>
   );
