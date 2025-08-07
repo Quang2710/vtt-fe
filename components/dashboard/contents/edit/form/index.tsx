@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  Button,
   Chip,
   Divider,
   Input,
@@ -13,6 +14,7 @@ import { StatusDot } from "./status";
 import ThumbnailUploader from "./thumbnail-uploader";
 import CampaignImageSection from "./campaign-image-uploader";
 import TextEditor from "./text-editor";
+import ShortUrlSection from "./short-URL";
 
 export default function CampaignEditForm() {
   return (
@@ -110,6 +112,15 @@ export default function CampaignEditForm() {
           </label>
           <Input variant="bordered" placeholder="Paste the Youtube URL here" />
         </div>
+
+        <ShortUrlSection />
+
+        <Button
+          className="inline-block cursor-pointer box-border overflow-hidden relative transition-[0.1s] ease-in select-none border-0 rounded-xl text-center text-white font-['Lexend_Deca'] text-sm font-bold bg-[#eb008c] hover:bg-[#d0007d] p-2.5 m-0 no-underline shadow w-full"
+          fullWidth
+        >
+          SAVE AND SEE MY CAMPAIGN
+        </Button>
       </div>
     </div>
   );

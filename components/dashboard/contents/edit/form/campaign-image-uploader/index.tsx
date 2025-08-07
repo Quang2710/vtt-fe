@@ -46,7 +46,7 @@ export default function CampaignImageSection() {
   };
 
   return (
-    <div className="flex flex-col gap-4 w-full">
+    <div className="flex flex-col gap-2 w-full">
       <div className="text-sm font-semibold text-gray-700">Campaign images</div>
       <p className="text-sm text-gray-500">
         For best viewing experience, we recommend uploading a high resolution

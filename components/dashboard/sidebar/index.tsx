@@ -22,9 +22,9 @@ export default function Sidebar({
           </h4>
           <ul className="space-y-1 flex flex-col gap-4 pl-2">
             <li
-              className={`font-semibold cursor-pointer ${
+              className={` cursor-pointer ${
                 selected === "statistics"
-                  ? "text-black"
+                  ? "text-black font-semibold"
                   : "text-gray-600 hover:text-black"
               }`}
               onClick={() => onSelect("statistics")}
