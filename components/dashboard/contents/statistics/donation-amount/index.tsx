@@ -50,15 +50,17 @@ const chartConfig = (labels: string[], data: number[]) => ({
       fill: true,
       borderColor: "rgb(239, 68, 98)",
       backgroundColor: "rgba(239, 68, 98, 0.1)",
-      pointBackgroundColor: "rgb(239, 68, 98)",
+      pointBackgroundColor: "white", // Make center white/empty
+      pointBorderColor: "rgb(239, 68, 98)", // Set outline color
+      pointBorderWidth: 1, // Set outline thickness
+      pointRadius: 3,
       tension: 0,
+      borderWidth: 1,
     },
   ],
 });
 
 export default function DonationAmountCard() {
-  const [tab, setTab] = useState<"7D" | "30D">("7D");
-
   return (
     <Card shadow="sm" className="md:px-2 " radius="md" fullWidth>
       <CardHeader className="flex items-center justify-between">
@@ -70,10 +72,16 @@ export default function DonationAmountCard() {
           fullWidth
           color="danger"
           className="flex font-semibold justify-center items-center text-sm"
+          classNames={{
+            cursor: "w-full ",
+            tab: "border-b pb-6 w-full relative border-divider",
+          }}
         >
           <Tab value="7D" className="flex flex-col gap-6" title="7 DAYS">
             <div className="flex flex-col gap-4">
-              <div className="text-3xl font-medium text-gray-900">0 VND</div>
+              <div className="text-3xl font-medium text-gray-900">
+                2.000.000 VND
+              </div>
               <p className="text-sm text-gray-700">
                 The donation amount your campaign has received (including
                 offline donations).
@@ -96,6 +104,13 @@ export default function DonationAmountCard() {
                       },
                     },
                     y: {
+                      grid: {
+                        lineWidth: 1,
+                      },
+                      border: {
+                        color: "rgb(229, 231, 235)",
+                        dash: [5, 5],
+                      },
                       ticks: {
                         stepSize: 0.5,
                       },
@@ -107,7 +122,9 @@ export default function DonationAmountCard() {
           </Tab>
           <Tab value="30D" className="flex flex-col gap-6" title="30 DAYS">
             <div className="flex flex-col gap-4">
-              <div className="text-3xl font-medium text-gray-900">0 VND</div>
+              <div className="text-3xl font-medium text-gray-900">
+                2.000.000 VND
+              </div>
               <p className="text-sm text-gray-700">
                 The donation amount your campaign has received (including
                 offline donations).
@@ -129,6 +146,13 @@ export default function DonationAmountCard() {
                       },
                     },
                     y: {
+                      grid: {
+                        lineWidth: 1,
+                      },
+                      border: {
+                        color: "rgb(229, 231, 235)",
+                        dash: [5, 5],
+                      },
                       ticks: {
                         stepSize: 0.5,
                       },
