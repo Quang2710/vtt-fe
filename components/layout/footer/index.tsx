@@ -9,9 +9,9 @@ const Footer = () => {
     "About Give.Asia",
     "Blog",
     "Tech for Good",
-    "Chính sách bảo mật",
-    "Điều khoản & Quy định",
-    "An ninh",
+    "Privacy Policy",
+    "Terms & Conditions",
+    "Security",
     "General feedback",
     "Contact us",
   ];

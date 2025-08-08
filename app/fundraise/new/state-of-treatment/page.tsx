@@ -2,15 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { IoIosArrowForward } from "react-icons/io";
-
-const messages = [
-    "What happened to you?",
-    { title: "Waiting to receive treatment", value: "waiting", redirect: "/fundraise/new/raising-money" },
-    { title: "Receiving outpatient treatment", value: "outpatient-treatment", redirect: "/fundraise/new/hospital-treated" },
-    { title: "Warding in hospital", value: "warding-in-hospital", redirect: "/fundraise/new/hospital-treated" },
-    { title: "Recovery (follow-up, rehabilitation)", value: "recovery", redirect: "/fundraise/new/hospital-treated" },
-    { title: "Post-treatment maintenance", value: "post-treatment-maintenance", redirect: "/fundraise/new/hospital-treated" },
-];
+import { useFundraiseStore } from "@/stores/fundraiseStore";
 
 const StateOfTreatmentPage: React.FC = () => {
     const [visibleCount, setVisibleCount] = useState(0);
@@ -18,6 +10,19 @@ const StateOfTreatmentPage: React.FC = () => {
     const [animatingIdx, setAnimatingIdx] = useState(-1);
 
     const router = useRouter();
+    const setAnswer = useFundraiseStore((state) => state.setAnswer);
+    const questions = useFundraiseStore((state) => state.questions);
+    const question11 = questions.find(q => q.id === 12);
+
+    const messages = [
+        question11?.name || "What stage of treatment are you in?",
+        { title: "Waiting to receive treatment", value: "waiting", redirect: "/fundraise/new/raising-money" },
+        { title: "Receiving outpatient treatment", value: "outpatient-treatment", redirect: "/fundraise/new/hospital-treated" },
+        { title: "Warding in hospital", value: "warding-in-hospital", redirect: "/fundraise/new/hospital-treated" },
+        { title: "Recovery (follow-up, rehabilitation)", value: "recovery", redirect: "/fundraise/new/hospital-treated" },
+        { title: "Post-treatment maintenance", value: "post-treatment-maintenance", redirect: "/fundraise/new/hospital-treated" },
+    ];
+
     useEffect(() => {
         if (visibleCount < messages.length) {
             setShowTyping(true);
@@ -39,7 +44,6 @@ const StateOfTreatmentPage: React.FC = () => {
             <p className="text-[#999] text-[16px] font-medium">Rosie @ Give.Asia</p>
             {messages.slice(0, visibleCount).map((msg, idx) => {
                 if (idx === 0 && typeof msg === 'string') {
-                    // First message: white background
                     return (
                         <div
                             key={idx}
@@ -79,11 +83,9 @@ const StateOfTreatmentPage: React.FC = () => {
                                 "hover:bg-[#c90074] hover:scale-[1.03] active:scale-95",
                             ].join(" ")}
                             onClick={() => {
+                                setAnswer(12, { answer: m.value, fileUrl: "" });
                                 if (m.redirect) {
                                     router.push(m.redirect);
-                                } else {
-                                    console.log('Selected relation value:', m.value);
-                                    // router.push('/fundraise/new/beneficiary');
                                 }
                             }}
                         >

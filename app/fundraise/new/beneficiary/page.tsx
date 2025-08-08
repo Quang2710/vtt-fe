@@ -1,7 +1,8 @@
-
 "use client";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
+import { useFundraiseStore } from "@/stores/fundraiseStore";
+import { useFundraiseStepGuard } from "@/hooks/useFundraiseStepGuard";
 
 const countries = [
   "Vietnam",
@@ -17,12 +18,31 @@ const countries = [
 ];
 
 const BeneficiaryPage: React.FC = () => {
+  const isGuardChecked = useFundraiseStepGuard(2, "/fundraise/new");
+
   const router = useRouter();
   const [visibleCount, setVisibleCount] = useState(0);
   const [showTyping, setShowTyping] = useState(true);
   const [animatingIdx, setAnimatingIdx] = useState(-1);
-  const [name, setName] = useState("");
-  const [country, setCountry] = useState("Singapore");
+
+  const answers = useFundraiseStore((state) => state.answers);
+  const setAnswer = useFundraiseStore((state) => state.setAnswer);
+  const questions = useFundraiseStore((state) => state.questions);
+
+  const [name, setName] = useState(
+    typeof answers[3] === "object" && answers[3] !== null && "answer" in answers[3]
+      ? answers[3].answer
+      : (answers[3] as string) || ""
+  );
+
+  const [country, setCountry] = useState(
+    typeof answers[4] === "object" && answers[4] !== null && "answer" in answers[4]
+      ? answers[4].answer
+      : (answers[4] as string) || "Singapore"
+  );
+
+  const question3 = questions.find(q => q.id === 3);
+  const question4 = questions.find(q => q.id === 4);
 
   useEffect(() => {
     if (visibleCount < 3) {
@@ -40,9 +60,23 @@ const BeneficiaryPage: React.FC = () => {
     }
   }, [visibleCount]);
 
+  useEffect(() => {
+    if (name && (typeof answers[3] !== "object" || answers[3]?.answer !== name)) {
+      setAnswer(3, { answer: name, fileUrl: "" });
+    }
+  }, [name, setAnswer]);
+
+  useEffect(() => {
+    if (country && (typeof answers[4] !== "object" || answers[4]?.answer !== country)) {
+      setAnswer(4, { answer: country, fileUrl: "" });
+    }
+  }, [country, setAnswer]);
+
+  if (!isGuardChecked) return null;
+
   return (
     <div className="create-container h-[100vh] flex flex-col max-w-3xl mx-auto mt-[30px] mb-[60px] my-[20%] p-[40px]">
-        <p className="text-[#999] text-[16px] font-medium">Rosie @ Give.Asia</p>
+      <p className="text-[#999] text-[16px] font-medium">Rosie @ Give.Asia</p>
       {visibleCount > 0 && (
         <div
           className={[
@@ -59,7 +93,9 @@ const BeneficiaryPage: React.FC = () => {
       )}
       {visibleCount > 1 && (
         <div className="mb-[10px]">
-          <label className="block text-[16px] font-medium mb-2">What is the name of the beneficiary?</label>
+          <label className="block text-[16px] font-medium mb-2">
+            {question3?.name || "What is the name of the beneficiary?"}
+          </label>
           <div
             className={[
               "w-full self-start transition-all duration-500",
@@ -81,7 +117,9 @@ const BeneficiaryPage: React.FC = () => {
       )}
       {visibleCount > 2 && (
         <div className="mb-[10px]">
-          <label className="block text-[16px] font-medium mb-2">Which country is the beneficiary receiving treatment?</label>
+          <label className="block text-[16px] font-medium mb-2">
+            {question4?.name || "Which country is the beneficiary receiving treatment?"}
+          </label>
           <div
             className={[
               "w-full self-start transition-all duration-500",

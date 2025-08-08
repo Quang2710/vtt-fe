@@ -9,6 +9,7 @@ const HIDDEN_PATHS = [
   "/login",
   "/register",
   "/faq",
+  "/fundraise/new"
 ];
 
 const HelpButton: React.FC = () => {

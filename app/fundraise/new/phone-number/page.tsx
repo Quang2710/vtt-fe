@@ -1,6 +1,8 @@
 "use client";
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useFundraiseStore } from "@/stores/fundraiseStore";
+import { useFundraiseStepGuard } from "@/hooks/useFundraiseStepGuard";
 
 const countryCodes = [
 	{ code: "+84", label: "Vietnam" },
@@ -16,9 +18,27 @@ const countryCodes = [
 ];
 
 const PhoneNumberPage: React.FC = () => {
-	const [selectedCode, setSelectedCode] = useState(countryCodes[0].code);
-	const [phone, setPhone] = useState("");
+	const isGuardChecked = useFundraiseStepGuard(5, "/fundraise/new");
+
 	const router = useRouter();
+	const setAnswer = useFundraiseStore((state) => state.setAnswer);
+	const questions = useFundraiseStore((state) => state.questions);
+	const answers = useFundraiseStore((state) => state.answers);
+	const question7 = questions.find(q => q.id === 7);
+
+	const prevPhone = typeof answers[7] === "string" ? answers[7] : "";
+	const matchedCode = countryCodes.find(c => prevPhone.startsWith(c.code));
+	const [selectedCode, setSelectedCode] = useState(matchedCode ? matchedCode.code : countryCodes[0].code);
+	const [phone, setPhone] = useState(
+		matchedCode ? prevPhone.replace(matchedCode.code, "") : ""
+	);
+
+	if (!isGuardChecked) return null;
+
+	const handleNext = () => {
+		setAnswer(7, `${selectedCode}${phone}`);
+		router.push("/fundraise/new/happened");
+	};
 
 	return (
 		<div className="main-container-upload bg-[#f4f4f4]">
@@ -31,7 +51,7 @@ const PhoneNumberPage: React.FC = () => {
 					regarding fundraising matters.
 				</div>
 				<p className="mb-2 text-[16px] font-medium text-[#333]">
-					What is your phone number?
+					{question7?.name || "What is your phone number?"}
 				</p>
 				<div className="flex items-center gap-6 mb-6 w-full">
 					<div className="w-[90px] h-[42px] bg-white rounded-lg flex items-center justify-center overflow-hidden shadow-[0_20px_30px_0_rgba(0,0,0,0.05)]">
@@ -58,7 +78,7 @@ const PhoneNumberPage: React.FC = () => {
 				<button
 					className="cursor-pointer w-full bg-[#EB008C] text-white text-[18px] font-semibold py-2 rounded-lg shadow hover:bg-[#c90074] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
 					disabled={!phone.trim()}
-					onClick={() => router.push("/fundraise/new/happened")}
+					onClick={handleNext}
 				>
 					Next
 				</button>
