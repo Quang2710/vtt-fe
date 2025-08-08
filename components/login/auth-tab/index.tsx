@@ -7,9 +7,12 @@ import { FaFacebookF, FaGoogle } from "react-icons/fa";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { loginSchema, registerSchema } from "@/libs/validation-schema";
 import { fetcher } from "@/libs/fetcher";
+import { useRouter } from "next/navigation";
+import { useUserStore } from "@/stores/userStore";
 
 export default function AuthTabs() {
   const pathname = usePathname();
+  const router = useRouter();
   const [activeTab, setActiveTab] = useState<"login" | "register" | string>(
     pathname.replace("/", "") ?? "login"
   );
@@ -31,13 +34,20 @@ export default function AuthTabs() {
   const handleSubmitRegister = async (values: any) => {
     setApiError("");
     try {
-      console.log("values", values);
       const res = await fetcher(`/auth/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(values),
       });
-      console.log("res", res);
+      const token = res.token || (res.data && res.data.token);
+      if (token) {
+        document.cookie = `token=${token}; path=/; max-age=604800`;
+        if (res.userInfo) {
+          useUserStore.getState().setUser(res.userInfo); 
+           console.log("userInfo in zustand:", useUserStore.getState().user);
+        }
+        window.location.href = "/";
+      }
     } catch (err: any) {
       setApiError(err.message || "Unexpected error");
     }
@@ -46,13 +56,20 @@ export default function AuthTabs() {
   const handleSubmitLogin = async (values: any) => {
     setApiError("");
     try {
-      console.log("values", values);
       const res = await fetcher(`/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(values),
       });
-      console.log("res", res);
+      const token = res.token || (res.data && res.data.token);
+      if (token) {
+        document.cookie = `token=${token}; path=/; max-age=604800`;
+        if (res.userInfo) {
+          useUserStore.getState().setUser(res.userInfo);
+           console.log("userInfo in zustand:", useUserStore.getState().user); 
+        }
+        window.location.href = "/";
+      }
     } catch (err: any) {
       setApiError(err.message || "Unexpected error");
     }

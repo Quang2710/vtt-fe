@@ -1,16 +1,24 @@
 'use client';
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { usePathname } from "next/navigation";
 import { GoQuestion } from "react-icons/go";
 import HelpFaqs from "./HelpFaqs";
 import HelpContact from "./HelpContact";
 
+const HIDDEN_PATHS = [
+  "/login",
+  "/register",
+  "/faq",
+];
+
 const HelpButton: React.FC = () => {
+  const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const [tab, setTab] = useState<'faqs' | 'contact'>('faqs');
   const [showPopup, setShowPopup] = useState(false);
   const [visible, setVisible] = useState(false);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (open) {
       setShowPopup(true);
       setTimeout(() => setVisible(true), 10); 
@@ -21,6 +29,8 @@ const HelpButton: React.FC = () => {
     }
   }, [open]);
 
+  if (HIDDEN_PATHS.some(path => pathname.startsWith(path))) return null;
+
   return (
     <div style={{ position: "fixed", bottom: 32, right: 32, zIndex: 50 }}>
       <button
@@ -28,7 +38,7 @@ const HelpButton: React.FC = () => {
         className="w-14 h-14 rounded-full bg-[#4b3299] flex items-center justify-center shadow-lg hover:scale-105 transition-transform cursor-pointer text-white"
         style={{ boxShadow: "0 2px 12px rgba(0,0,0,0.15)" }}
       >
-        <GoQuestion className="text-white text-3xl" />
+        <GoQuestion className="text-white text-3xl cursor-pointer" style={{ pointerEvents: 'none' }} />
       </button>
       {showPopup && (
         <div
@@ -62,7 +72,7 @@ const HelpButton: React.FC = () => {
                   Contact us
                 </button>
               </div>
-              <div className="px-6 py-4" style={{ position: 'relative', height: '100%' }}>
+              <div className="px-6 pt-4" style={{ position: 'relative', height: '100%' }}>
                 <div
                   style={{ position: 'absolute', inset: 0, transition: 'opacity 0.3s, transform 0.3s', opacity: tab === 'faqs' ? 1 : 0, transform: tab === 'faqs' ? 'translateX(0)' : 'translateX(-24px)', pointerEvents: tab === 'faqs' ? 'auto' : 'none' }}
                 >
