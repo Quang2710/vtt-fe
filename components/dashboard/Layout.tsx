@@ -7,6 +7,7 @@ import ViewDonation from "./contents/view-donation";
 import CampaignEditPage from "./contents/edit";
 import ThankYouMessage from "./contents/thankyou-message";
 import Share from "./contents/share";
+import DocsManager from "./contents/docs";
 
 interface DashboardLayoutProps {
   children?: ReactNode;
@@ -28,6 +29,7 @@ export default function DashboardLayout({
         {selected === "edit" && <CampaignEditPage />}
         {selected === "thankyou-message" && <ThankYouMessage />}
         {selected === "share" && <Share />}
+        {selected === "docs" && <DocsManager />}
       </main>
     </div>
   );

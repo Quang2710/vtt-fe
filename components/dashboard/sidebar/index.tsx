@@ -80,7 +80,14 @@ export default function Sidebar({
             >
               Share
             </li>
-            <li className="text-gray-600 hover:text-black cursor-pointer">
+            <li
+              className={`cursor-pointer ${
+                selected === "docs"
+                  ? "text-black font-semibold"
+                  : "text-gray-600 hover:text-black"
+              }`}
+              onClick={() => onSelect("docs")}
+            >
               Docs
             </li>
           </ul>

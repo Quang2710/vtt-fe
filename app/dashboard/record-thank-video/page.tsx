@@ -132,8 +132,8 @@ export default function RecordThankVideoPage() {
           </div>
         </div>
         {/* Right panel */}
-        <div className="flex-1 rounded-xl relative min-h-[360px] flex items-center justify-center border">
-          {!recordedBlob ? (
+        <div className="flex-1 flex gap-2 flex-col">
+          <div className="flex-1 bg-gray-400 rounded-xl relative min-h-[160px] flex items-center justify-center border-gray-500">
             <>
               <video
                 ref={videoRef}
@@ -161,26 +161,28 @@ export default function RecordThankVideoPage() {
                 </>
               )}
             </>
-          ) : (
-            <Card className="p-4 w-full text-center">
-              <p className="font-semibold mb-4">
-                Awesome! Please submit the video if you are happy with it.
-              </p>
-              <div className="flex justify-center gap-4">
+          </div>
+          {recordedBlob && (
+            <Card className="p-4 gap-4 flex flex-col md:flex-row justify-between ">
+              <div className="flex w-full items-center">
+                <p className="font-semibold text-center">
+                  Awesome! Please submit the video if you are happy with it.
+                </p>
+              </div>
+              <div className="flex w-full justify-end gap-4">
                 <button
                   className="text-pink-600 font-bold"
                   onClick={() => setRecordedBlob(null)}
                 >
                   RETAKE
                 </button>
-                <button
-                  className="bg-pink-600 text-white py-2 px-4 rounded-full font-bold"
+                <PinkButtonWidth
                   onClick={() => {
                     console.log("Uploading video...", recordedBlob);
                   }}
                 >
                   UPLOAD VIDEO
-                </button>
+                </PinkButtonWidth>
               </div>
             </Card>
           )}
