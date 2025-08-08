@@ -10,7 +10,7 @@ type FundraiseState = {
     questions: Question[];
     setQuestions: (questions: Question[]) => void;
 };
-export const useFundraiseStore = create<FundraiseState>((set) => ({
+ const useFundraiseStore = create<FundraiseState>((set) => ({
     questions: [],
     setQuestions: (questions) => set({ questions }),
 }));
