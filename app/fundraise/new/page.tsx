@@ -2,6 +2,18 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { IoIosArrowForward } from 'react-icons/io';
+import { create } from "zustand";
+import { fetcher } from '@/libs/fetcher';
+
+type Question = { id: number; name: string };
+type FundraiseState = {
+    questions: Question[];
+    setQuestions: (questions: Question[]) => void;
+};
+export const useFundraiseStore = create<FundraiseState>((set) => ({
+    questions: [],
+    setQuestions: (questions) => set({ questions }),
+}));
 
 const messages = [
     'Hello vũ Quang!',
@@ -13,6 +25,8 @@ const NewFundraisePage: React.FC = () => {
     const [visibleCount, setVisibleCount] = useState(0);
     const [showTyping, setShowTyping] = useState(true);
     const [animatingIdx, setAnimatingIdx] = useState(-1);
+
+    const setQuestions = useFundraiseStore((state) => state.setQuestions);
 
     useEffect(() => {
         if (visibleCount < messages.length) {
@@ -29,6 +43,33 @@ const NewFundraisePage: React.FC = () => {
             return () => clearTimeout(typingTimer);
         }
     }, [visibleCount]);
+
+    useEffect(() => {
+        const localQuestions = typeof window !== "undefined" ? localStorage.getItem("fundraiseQuestions") : null;
+        if (localQuestions) {
+            const parsed = JSON.parse(localQuestions);
+            setQuestions(parsed);
+            console.log("Questions from localStorage:", parsed);
+        } else {
+            let token: string | undefined = undefined;
+            if (typeof document !== "undefined") {
+                const match = document.cookie.match(/(^| )token=([^;]+)/);
+                token = match ? match[2] : undefined;
+            }
+            fetcher('/fundraiser/create', {
+                headers: {
+                    'Authorization': token ? `Bearer ${token}` : '',
+                },
+            })
+                .then(data => {
+                    if (data.Questions) {
+                        setQuestions(data.Questions);
+                        localStorage.setItem("fundraiseQuestions", JSON.stringify(data.Questions));
+                        console.log("Questions from API:", data.Questions);
+                    }
+                });
+        }
+    }, [setQuestions]);
 
     const router = useRouter();
     return (

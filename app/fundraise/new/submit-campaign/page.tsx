@@ -1,14 +1,18 @@
 "use client";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
-
-
+import { useFundraiseStore } from "@/stores/fundraiseStore";
+import { fetcher } from "@/libs/fetcher";
+import { a } from "framer-motion/client";
 
 const SubmitCampaignPage: React.FC = () => {
   const [visible, setVisible] = useState(false);
   const [showTyping, setShowTyping] = useState(true);
-  const [illness, setIllness] = useState("");
+  const [shortUrl, setShortUrl] = useState("");
+  const [error, setError] = useState<string | null>(null);
   const router = useRouter();
+
+  const answers = useFundraiseStore((state) => state.answers);
 
   useEffect(() => {
     setShowTyping(true);
@@ -18,6 +22,46 @@ const SubmitCampaignPage: React.FC = () => {
     }, 400);
     return () => clearTimeout(timer);
   }, []);
+
+  const handleSubmit = async () => {
+    const answerArr = Object.entries(answers).map(([questionId, value]) => {
+      if (typeof value === "object" && value !== null && "fileUrl" in value) {
+        return {
+          questionId: Number(questionId),
+          answer: value.answer,
+          fileUrl: value.fileUrl,
+        };
+      }
+      return {
+        questionId: Number(questionId),
+        answer: value,
+        fileUrl: "",
+      };
+    });
+
+    let token: string | undefined = undefined;
+    if (typeof document !== "undefined") {
+      const match = document.cookie.match(/(^| )token=([^;]+)/);
+      token = match ? match[2] : undefined;
+    }
+
+    try {
+      await fetcher("/fundraiser/create", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": token ? `Bearer ${token}` : "",
+        },
+        body: JSON.stringify({ answers: answerArr }),
+      });
+      if (typeof window !== "undefined") {
+        localStorage.removeItem("fundraiseAnswers");
+      }
+      router.push("/fundraise/new/thanks-sharing");
+    } catch (err: any) {
+      setError(err?.message || "Submit failed!");
+    }
+  };
 
   return (
     <div className="create-container h-[100vh] flex flex-col max-w-2xl mx-auto mt-[30px] mb-[60px] my-[20%] p-[40px]">
@@ -46,16 +90,32 @@ const SubmitCampaignPage: React.FC = () => {
               className="bg-transparent border-none outline-none w-full text-[14px] font-normal text-[#666]"
               style={{lineHeight: '30px', padding: 0, margin: 0}}
               placeholder="Enter short URL..."
+              value={shortUrl}
+              onChange={e => setShortUrl(e.target.value)}
             />
           </div>
           <button
             className="cursor-pointer w-full bg-[#EB008C] text-white text-[14px] font-semibold rounded-lg shadow hover:bg-[#c90074] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed mt-3 h-10"
-            // disabled={!illness.trim()}
-            onClick={() => router.push("/fundraise/new/thanks-sharing")}
+            onClick={handleSubmit}
+            disabled={!shortUrl.trim()}
           >
              SUBMIT YOUR CAMPAIGN
           </button>
         </>
+      )}
+      {error && (
+        <div className="fixed inset-0 flex items-center justify-center z-50 bg-black/30">
+          <div className="bg-white rounded-xl shadow-lg p-6 min-w-[300px] flex flex-col items-center">
+            <div className="text-pink-600 font-semibold text-lg mb-2">Error</div>
+            <div className="text-[#333] mb-4">{error}</div>
+            <button
+              className="px-4 py-2 bg-pink-600 text-white rounded-lg font-medium hover:bg-pink-700"
+              onClick={() => setError(null)}
+            >
+              Đóng
+            </button>
+          </div>
+        </div>
       )}
     </div>
   );

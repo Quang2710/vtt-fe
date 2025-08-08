@@ -2,12 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { IoIosArrowForward } from "react-icons/io";
-
-const messages = [
-    "What happened to you?",
-    { title: "Illness", value: "illness", redirect: "/fundraise/new/illness" },
-    { title: "Accident", value: "accident", redirect: "/fundraise/new/accident" },
-];
+import { useFundraiseStore } from "@/stores/fundraiseStore";
 
 const HappenedStep: React.FC = () => {
     const [visibleCount, setVisibleCount] = useState(0);
@@ -15,6 +10,16 @@ const HappenedStep: React.FC = () => {
     const [animatingIdx, setAnimatingIdx] = useState(-1);
 
     const router = useRouter();
+    const questions = useFundraiseStore((state) => state.questions);
+    const setAnswer = useFundraiseStore((state) => state.setAnswer);
+    const question8 = questions.find(q => q.id === 8);
+
+    const messages = [
+        question8?.name || "What happened to you?",
+        { title: "Illness", value: "illness", redirect: "/fundraise/new/illness" },
+        { title: "Accident", value: "accident", redirect: "/fundraise/new/accident" },
+    ];
+
     useEffect(() => {
         if (visibleCount < messages.length) {
             setShowTyping(true);
@@ -36,7 +41,6 @@ const HappenedStep: React.FC = () => {
             <p className="text-[#999] text-[16px] font-medium">Rosie @ Give.Asia</p>
             {messages.slice(0, visibleCount).map((msg, idx) => {
                 if (idx === 0 && typeof msg === 'string') {
-                    // First message: white background
                     return (
                         <div
                             key={idx}
@@ -76,11 +80,9 @@ const HappenedStep: React.FC = () => {
                                 "hover:bg-[#c90074] hover:scale-[1.03] active:scale-95",
                             ].join(" ")}
                             onClick={() => {
+                                setAnswer(8, { answer: m.value, fileUrl: "" });
                                 if (m.redirect) {
                                     router.push(m.redirect);
-                                } else {
-                                    console.log('Selected relation value:', m.value);
-                                    // router.push('/fundraise/new/beneficiary');
                                 }
                             }}
                         >

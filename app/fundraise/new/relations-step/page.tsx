@@ -2,20 +2,27 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { IoIosArrowForward } from "react-icons/io";
+import { useFundraiseStore } from "@/stores/fundraiseStore";
+import { useFundraiseStepGuard } from "@/hooks/useFundraiseStepGuard";
 
 const messages = [
     "How old is the beneficiary?",
     { title: "I am the beneficiary", value: "self", redirect: "/fundraise/new/yourself-photos-step" },
     { title: "Family of the beneficiary", value: "family", redirect: "/fundraise/new/beneficiary-together" },
-    { title: "Friend of the beneficiary", value: "friend" }
+    { title: "Friend of the beneficiary", value: "friend", redirect: "/fundraise/new/beneficiary-together" }
 ];
 
 const RelationStep: React.FC = () => {
+     useFundraiseStepGuard(3, "/fundraise/new");
     const [visibleCount, setVisibleCount] = useState(0);
     const [showTyping, setShowTyping] = useState(true);
     const [animatingIdx, setAnimatingIdx] = useState(-1);
 
     const router = useRouter();
+    const questions = useFundraiseStore((state) => state.questions);
+    const question5 = questions.find(q => q.id === 5);
+    const setAnswer = useFundraiseStore((state) => state.setAnswer);
+
     useEffect(() => {
         if (visibleCount < messages.length) {
             setShowTyping(true);
@@ -36,8 +43,7 @@ const RelationStep: React.FC = () => {
         <div className="create-container h-[100vh] flex flex-col max-w-2xl mx-auto mt-[30px] mb-[60px] my-[20%] p-[40px]">
             <p className="text-[#999] text-[16px] font-medium">Rosie @ Give.Asia</p>
             {messages.slice(0, visibleCount).map((msg, idx) => {
-                if (idx === 0 && typeof msg === 'string') {
-                    // First message: white background
+                if (idx === 0) {
                     return (
                         <div
                             key={idx}
@@ -55,7 +61,7 @@ const RelationStep: React.FC = () => {
                                 "mb-[10px]",
                             ].join(" ")}
                         >
-                            {msg}
+                            {question5?.name || "How are you related to the beneficiary?"}
                         </div>
                     );
                 } else if (typeof msg === 'object' && msg !== null && 'title' in msg) {
@@ -77,11 +83,9 @@ const RelationStep: React.FC = () => {
                                 "hover:bg-[#c90074] hover:scale-[1.03] active:scale-95",
                             ].join(" ")}
                             onClick={() => {
+                                setAnswer(5, { answer: m.value, fileUrl: "" });
                                 if (m.redirect) {
                                     router.push(m.redirect);
-                                } else {
-                                    console.log('Selected relation value:', m.value);
-                                    // router.push('/fundraise/new/beneficiary');
                                 }
                             }}
                         >

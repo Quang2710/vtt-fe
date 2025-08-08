@@ -2,17 +2,16 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { IoIosArrowForward } from "react-icons/io";
+import { useFundraiseStore } from "@/stores/fundraiseStore";
+import { useFundraiseStepGuard } from "@/hooks/useFundraiseStepGuard";
 
-type Message =
-  | string
-  | {
-      title: string;
-      desc: string;
-      href?: string;
-    };
+type Message = {
+  title: string;
+  desc: string;
+  href?: string;
+};
 
 const messages: Message[] = [
-  "Do you have a photo of you and the beneficiary together?",
   {
     title: "Yes",
     desc: "Upload a photo of you and the beneficiary together",
@@ -38,9 +37,6 @@ const MessageOption: React.FC<{
       className={[
         "w-full self-start flex items-center justify-between gap-4 cursor-pointer",
         "transition-all duration-300",
-        animating
-          ? "opacity-0 translate-y-4 scale-95"
-          : "opacity-100 translate-y-0 scale-100",
         "text-[18px] leading-[24px] font-semibold text-white bg-[#EB008C]",
         "border border-[#eee]",
         "shadow-[0_20px_30px_0_rgba(0,0,0,0.05)]",
@@ -64,16 +60,20 @@ const MessageOption: React.FC<{
 };
 
 const BeneficiaryTogetherPage: React.FC = () => {
-  const [visibleCount, setVisibleCount] = useState(0);
+   useFundraiseStepGuard(4, "/fundraise/new");
+  const [visibleCount, setVisibleCount] = useState(1);
   const [showTyping, setShowTyping] = useState(true);
   const [animatingIdx, setAnimatingIdx] = useState(-1);
+  const questions = useFundraiseStore((state) => state.questions);
+  const question6 = questions.find((q) => q.id === 6);
+  const setAnswer = useFundraiseStore((state) => state.setAnswer);
 
   useEffect(() => {
-    if (visibleCount < messages.length) {
+    if (visibleCount <= messages.length) {
       setShowTyping(true);
       const typingTimer = setTimeout(() => {
         setShowTyping(false);
-        setAnimatingIdx(visibleCount);
+        setAnimatingIdx(visibleCount - 1);
         const msgTimer = setTimeout(() => {
           setVisibleCount((c) => c + 1);
           setAnimatingIdx(-1);
@@ -87,44 +87,39 @@ const BeneficiaryTogetherPage: React.FC = () => {
   return (
     <div className="create-container h-[100vh] flex flex-col max-w-2xl mx-auto mt-[30px] mb-[60px] my-[20%] p-[40px]">
       <p className="text-[#999] text-[16px] font-medium">Rosie @ Give.Asia</p>
-      {messages.slice(0, visibleCount).map((msg, idx) => {
-        if (idx === 0 && typeof msg === "string") {
-          // First message: white background
-          return (
-            <div
-              key={idx}
-              className={[
-                "w-full self-start",
-                "transition-all duration-500",
-                animatingIdx === idx
-                  ? "opacity-0 translate-y-4 scale-95"
-                  : "opacity-100 translate-y-0 scale-100",
-                "text-[18px] leading-[24px] font-semibold text-[#333] bg-white",
-                "shadow-[0_20px_30px_0_rgba(0,0,0,0.05)]",
-                "border border-[#eee]",
-                "rounded-[12px]",
-                "py-[15px] px-[25px]",
-                "mb-[10px]",
-              ].join(" ")}
-            >
-              {msg}
-            </div>
-          );
-        } else if (typeof msg === "object" && msg !== null && "title" in msg && "desc" in msg) {
-          return (
-            <MessageOption
-              key={idx}
-              title={msg.title}
-              desc={msg.desc}
-              href={msg.href}
-              animating={animatingIdx === idx}
-            />
-          );
-        } else {
-          return null;
-        }
-      })}
-      {visibleCount < messages.length && showTyping && (
+      {/* Hiển thị câu hỏi đầu tiên */}
+      {visibleCount >= 1 && (
+        <div
+          className={[
+            "w-full self-start",
+            "transition-all duration-500",
+            animatingIdx === 0
+              ? "opacity-0 translate-y-4 scale-95"
+              : "opacity-100 translate-y-0 scale-100",
+            "text-[18px] leading-[24px] font-semibold text-[#333] bg-white",
+            "shadow-[0_20px_30px_0_rgba(0,0,0,0.05)]",
+            "border border-[#eee]",
+            "rounded-[12px]",
+            "py-[15px] px-[25px]",
+            "mb-[10px]",
+          ].join(" ")}
+        >
+          {question6?.name || "Do you have a photo of you and the beneficiary together?"}
+        </div>
+      )}
+      {messages.map((msg, idx) =>
+        visibleCount > idx + 1 ? (
+          <MessageOption
+            key={idx}
+            title={msg.title}
+            desc={msg.desc}
+            href={msg.href}
+            animating={animatingIdx === idx + 1}
+            onClick={() => setAnswer(6, { answer: msg.title, fileUrl: "" })}
+          />
+        ) : null
+      )}
+      {visibleCount <= messages.length && showTyping && (
         <div
           className={
             "rounded-2xl px-5 py-3 shadow-md bg-[#f4f4f4] text-[17px] text-black w-fit self-start animate-pulse"

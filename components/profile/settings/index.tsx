@@ -16,6 +16,7 @@ const Settings = () => {
 
     const [loading, setLoading] = useState(false);
     const [apiError, setApiError] = useState("");
+    const [message, setMessage] = useState("");
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         setForm({ ...form, [e.target.name]: e.target.value });
@@ -24,6 +25,7 @@ const Settings = () => {
     const handleSave = async () => {
         setLoading(true);
         setApiError("");
+        setMessage("");
         try {
             const token =
                 typeof window !== "undefined"
@@ -45,8 +47,33 @@ const Settings = () => {
                     }),
                 });
             }
-            // API update profile 
-            alert("Saved!");
+
+            await fetcher("/user/update", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`,
+                },
+                body: JSON.stringify({
+                    full_name: form.full_name,
+                    password: form.currentPassword,
+                    new_password: form.newPassword,
+                    email: form.email,
+                    description: form.bio,
+                    my_profile_url: form.profileUrl,
+                }),
+            });
+
+            const updatedUser = {
+                ...user,
+                full_name: form.full_name,
+                email: form.email,
+                my_profile_url: form.profileUrl,
+                description: form.bio,
+            };
+            useUserStore.getState().setUser(updatedUser);
+            localStorage.setItem("userInfo", JSON.stringify(updatedUser));
+            setMessage("Update profile success!");
         } catch (err: any) {
             setApiError(err.message || "Could not save");
         } finally {
@@ -122,8 +149,13 @@ const Settings = () => {
                     >
                         {loading ? "Saving..." : "Save Changes"}
                         {apiError && (
-                            <span className="absolute left-1/2 -translate-x-1/2 -bottom-7 text-red-500 text-sm font-medium">
+                            <span className="absolute left-1/2 -translate-x-1/2 -bottom-7 text-pink-600 text-sm font-medium">
                                 {apiError}
+                            </span>
+                        )}
+                        {message && (
+                            <span className="absolute left-1/2 -translate-x-1/2 -bottom-7 text-green-600 text-sm font-medium">
+                                {message}
                             </span>
                         )}
                     </button>
@@ -174,7 +206,7 @@ const Settings = () => {
                     </div>
                 </div>
             </div>
-            <div className="w-full mx-auto bg-white rounded-xl shadow-lg p-8 flex gap-10">
+            <div className="w-full mx-auto bg-white rounded-xl shadow-lg p-8 flex gap-10 my-4">
                 <div className="w-full flex flex-col gap-6">
                     <h2 className="text-xl font-bold text-[#333] mb-2">Manage email notifications</h2>
                     <div className="flex flex-col gap-4">
