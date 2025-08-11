@@ -30,6 +30,19 @@ const UploadPhotoTogetherPage: React.FC = () => {
     return { beneficiary: b || "", you: y || "" };
   });
 
+  React.useEffect(() => {
+    const prev = answers[19];
+    const prevAnswer =
+      typeof prev === "object" && prev !== null && "answer" in prev
+        ? prev.answer
+        : "";
+
+    setAnswer(19, {
+      answer: prevAnswer,
+      fileUrl: `${fileUrls.beneficiary || ""},${fileUrls.you || ""}`,
+    });
+  }, [fileUrls]);
+
   const handleFileChange = async (
     e: React.ChangeEvent<HTMLInputElement>,
     who: "beneficiary" | "you"
@@ -59,24 +72,11 @@ const UploadPhotoTogetherPage: React.FC = () => {
         body: formData,
       });
       if (data.status && data.url) {
-        setFileUrls(prevUrls => {
-          const newFileUrls =
-            who === "beneficiary"
-              ? { ...prevUrls, beneficiary: data.url }
-              : { ...prevUrls, you: data.url };
-
-          const prev = answers[19];
-          const prevAnswer =
-            typeof prev === "object" && prev !== null && "answer" in prev
-              ? prev.answer
-              : "";
-
-          setAnswer(19, {
-            answer: prevAnswer,
-            fileUrl: `${newFileUrls.beneficiary || ""},${newFileUrls.you || ""}`,
-          });
-          return newFileUrls;
-        });
+        setFileUrls(prevUrls =>
+          who === "beneficiary"
+            ? { ...prevUrls, beneficiary: data.url }
+            : { ...prevUrls, you: data.url }
+        );
       }
     } finally {
       setLoading(false);

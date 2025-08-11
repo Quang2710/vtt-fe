@@ -8,8 +8,8 @@ export type AnswerValue = string | { answer: string; fileUrl: string };
 type FundraiseState = {
     questions: Question[];
     setQuestions: (questions: Question[]) => void;
-    answers: { [questionId: number]: AnswerValue }; // Sửa ở đây
-    setAnswer: (questionId: number, answer: AnswerValue) => void; // Sửa ở đây
+    answers: { [questionId: number]: AnswerValue }; 
+    setAnswer: (questionId: number, answer: AnswerValue) => void; 
 };
 
 function getInitialAnswers() {
