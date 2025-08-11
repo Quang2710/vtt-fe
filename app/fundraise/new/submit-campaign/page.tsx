@@ -12,7 +12,10 @@ const SubmitCampaignPage: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
 
+  const questions = useFundraiseStore((state) => state.questions);
+  const setAnswer = useFundraiseStore((state) => state.setAnswer);
   const answers = useFundraiseStore((state) => state.answers);
+  const question22 = questions.find((q) => q.id === 22);
 
   useEffect(() => {
     setShowTyping(true);
@@ -24,7 +27,10 @@ const SubmitCampaignPage: React.FC = () => {
   }, []);
 
   const handleSubmit = async () => {
-    const answerArr = Object.entries(answers).map(([questionId, value]) => {
+    setAnswer(22, { answer: shortUrl, fileUrl: "" });
+
+    const updatedAnswers = { ...answers, 22: { answer: shortUrl, fileUrl: "" } };
+    const answerArr = Object.entries(updatedAnswers).map(([questionId, value]) => {
       if (typeof value === "object" && value !== null && "fileUrl" in value) {
         return {
           questionId: Number(questionId),
@@ -79,16 +85,17 @@ const SubmitCampaignPage: React.FC = () => {
             Awesome! 🎉You're almost ready to start fundraising.
           </div>
           <div className="w-full self-start transition-all duration-500 text-[16px] leading-[24px] text-[#333] bg-white border border-[#eee] rounded-[12px] shadow-[0_20px_30px_0_rgba(0,0,0,0.05)] py-[15px] px-[25px] mb-[10px]">
-            This is your short campaign URL. You can customize your short URL for easy sharing. Ideally, the short URL should contains fewer than 10 letters.
+            {question22?.name ||
+              "This is your short campaign URL. You can customize your short URL for easy sharing. Ideally, the short URL should contains fewer than 10 letters."}
           </div>
 
-         <p className="text-[#999] text-[16px] font-medium">Campaign page URL</p>
-          <div className="flex items-center box-border bg-[#f4f4f4] rounded-[12px] text-[14px] font-normal text-[#666] mt-[10px] overflow-hidden w-full" style={{padding: '2px 2px 2px 10px', lineHeight: '30px'}}>
+          <p className="text-[#999] text-[16px] font-medium">Campaign page URL</p>
+          <div className="flex items-center box-border bg-[#f4f4f4] rounded-[12px] text-[14px] font-normal text-[#666] mt-[10px] overflow-hidden w-full" style={{ padding: '2px 2px 2px 10px', lineHeight: '30px' }}>
             <span className="text-[#666] text-[16px] font-bold mr-1">/</span>
             <input
               type="text"
               className="bg-transparent border-none outline-none w-full text-[14px] font-normal text-[#666]"
-              style={{lineHeight: '30px', padding: 0, margin: 0}}
+              style={{ lineHeight: '30px', padding: 0, margin: 0 }}
               placeholder="Enter short URL..."
               value={shortUrl}
               onChange={e => setShortUrl(e.target.value)}
@@ -99,7 +106,7 @@ const SubmitCampaignPage: React.FC = () => {
             onClick={handleSubmit}
             disabled={!shortUrl.trim()}
           >
-             SUBMIT YOUR CAMPAIGN
+            SUBMIT YOUR CAMPAIGN
           </button>
         </>
       )}
@@ -109,7 +116,7 @@ const SubmitCampaignPage: React.FC = () => {
             <div className="text-pink-600 font-semibold text-lg mb-2">Error</div>
             <div className="text-[#333] mb-4">{error}</div>
             <button
-              className="px-4 py-2 bg-pink-600 text-white rounded-lg font-medium hover:bg-pink-700"
+              className="px-4 py-2 bg-pink-600 text-white rounded-lg font-medium hover:bg-pink-700 cursor-pointer"
               onClick={() => setError(null)}
             >
               Đóng

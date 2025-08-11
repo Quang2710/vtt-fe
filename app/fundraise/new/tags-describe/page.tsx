@@ -1,19 +1,16 @@
 "use client";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
+import { useFundraiseStore } from "@/stores/fundraiseStore";
+import { fetcher } from "@/libs/fetcher";
 
-const TAG_OPTIONS = [
-  { value: "singapore", label: "Singapore" },
-  { value: "animal", label: "Animal" },
-  { value: "medical", label: "Medical" },
-];
+type TagOption = { value: string; label: string };
 
-type TagsSelectProps = {
+const TagsSelect: React.FC<{
   value: string[];
   onChange: (val: string[]) => void;
-};
-
-const TagsSelect: React.FC<TagsSelectProps> = ({ value, onChange }) => {
+  options: TagOption[];
+}> = ({ value, onChange, options }) => {
   const handleSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const selected = e.target.value;
     if (!selected) return;
@@ -30,7 +27,7 @@ const TagsSelect: React.FC<TagsSelectProps> = ({ value, onChange }) => {
     <div className="mb-3">
       <div className="flex gap-2 mb-2 flex-wrap">
         {value.map(tag => {
-          const label = TAG_OPTIONS.find(opt => opt.value === tag)?.label || tag;
+          const label = options.find(opt => opt.value === tag)?.label || tag;
           return (
             <span key={tag} className="inline-flex items-center bg-[#EB008C] text-white text-[14px] font-semibold px-3 py-1 rounded-full">
               {label}
@@ -53,7 +50,7 @@ const TagsSelect: React.FC<TagsSelectProps> = ({ value, onChange }) => {
         disabled={value.length >= 3}
       >
         <option value="">Select tag...</option>
-        {TAG_OPTIONS.filter(opt => !value.includes(opt.value)).map(option => (
+        {options.filter(opt => !value.includes(opt.value)).map(option => (
           <option value={option.value} key={option.value}>
             {option.label}
           </option>
@@ -69,8 +66,45 @@ const TagsSelect: React.FC<TagsSelectProps> = ({ value, onChange }) => {
 const TagDescribePage: React.FC = () => {
   const [visible, setVisible] = useState(false);
   const [showTyping, setShowTyping] = useState(true);
-  const [selectedTags, setSelectedTags] = useState<string[]>([]);
+  const [tagOptions, setTagOptions] = useState<TagOption[]>([]);
   const router = useRouter();
+
+  const questions = useFundraiseStore((state) => state.questions);
+  const setAnswer = useFundraiseStore((state) => state.setAnswer);
+  const answers = useFundraiseStore((state) => state.answers);
+  const question21 = questions.find(q => q.id === 21);
+
+  useEffect(() => {
+    let token: string | undefined = undefined;
+    if (typeof document !== "undefined") {
+      const match = document.cookie.match(/(^| )token=([^;]+)/);
+      token = match ? match[2] : undefined;
+    }
+    fetcher("/tags/get", {
+      headers: {
+        Authorization: token ? `Bearer ${token}` : "",
+      },
+    })
+      .then((res) => {
+        if (res.Tags) {
+          setTagOptions(
+            res.Tags.map((tag: any) => ({
+              value: String(tag.id),
+              label: tag.name,
+            }))
+          );
+        }
+      })
+      .catch(() => setTagOptions([]));
+  }, []);
+
+  const prev = answers[21];
+  const prevTags =
+    typeof prev === "object" && prev !== null && typeof prev.answer === "string"
+      ? prev.answer.split(",").filter(Boolean)
+      : [];
+
+  const [selectedTags, setSelectedTags] = useState<string[]>(prevTags);
 
   useEffect(() => {
     setShowTyping(true);
@@ -94,13 +128,17 @@ const TagDescribePage: React.FC = () => {
       {visible && (
         <>
           <div className="w-full self-start transition-all duration-500 text-[16px] leading-[24px] text-[#333] bg-white border border-[#eee] rounded-[12px] shadow-[0_20px_30px_0_rgba(0,0,0,0.05)] py-[15px] px-[25px] mb-[10px]">
-            To help givers discover your campaign, you can add up to 3 tags that best describe your campaign.
+            {question21?.name ||
+              "To help givers discover your campaign, you can add up to 3 tags that best describe your campaign."}
           </div>
-          <TagsSelect value={selectedTags} onChange={setSelectedTags} />
+          <TagsSelect value={selectedTags} onChange={setSelectedTags} options={tagOptions} />
           <button
             className="cursor-pointer w-full bg-[#EB008C] text-white text-[18px] font-semibold py-3 rounded-lg shadow hover:bg-[#c90074] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed mt-3"
             disabled={selectedTags.length === 0}
-            onClick={() => router.push("/fundraise/new/submit-campaign")}
+            onClick={() => {
+              setAnswer(21, { answer: selectedTags.join(","), fileUrl: "" });
+              router.push("/fundraise/new/submit-campaign");
+            }}
           >
             Next
           </button>

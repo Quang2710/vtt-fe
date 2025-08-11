@@ -2,12 +2,16 @@
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
+import { useFundraiseStore } from "@/stores/fundraiseStore";
 
 const PrepareVideoPage: React.FC = () => {
   const [visible, setVisible] = useState(false);
   const [showTyping, setShowTyping] = useState(true);
   const [showVideo, setShowVideo] = useState(false);
   const router = useRouter();
+
+  const questions = useFundraiseStore((state) => state.questions);
+  const question20 = questions.find((q) => q.id === 20);
 
   useEffect(() => {
     setShowTyping(true);
@@ -31,8 +35,8 @@ const PrepareVideoPage: React.FC = () => {
       {visible && (
         <>
           <div className="w-full self-start transition-all duration-500 text-[14px] leading-[24px] font-semibold text-[#333] bg-white border border-[#eee] rounded-[12px] shadow-[0_20px_30px_0_rgba(0,0,0,0.05)] py-[15px] px-[25px] mb-[10px]">
-            Record a simple thank you video for your givers in less than a
-            minute.
+            {question20?.name ||
+              "Record a simple thank you video for your givers in less than a minute."}
           </div>
 
           <div className="w-full self-start transition-all duration-500 text-[14px] leading-[24px] text-[#333] bg-white border border-[#eee] rounded-[12px] shadow-[0_20px_30px_0_rgba(0,0,0,0.05)] py-[15px] px-[25px] mb-[10px]">
@@ -86,7 +90,6 @@ const PrepareVideoPage: React.FC = () => {
             SKIP FOR NOW
           </button>
 
-          {/* Video Popup */}
           {showVideo && (
             <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm">
               <div className="bg-white rounded-lg shadow-lg p-4 max-w-lg w-full relative flex flex-col items-center">

@@ -56,9 +56,6 @@ const PersonalMedicalPage: React.FC = () => {
           className={[
             "w-full self-start",
             "transition-all duration-500",
-            animatingIdx === idx
-              ? "opacity-0 translate-y-4 scale-95"
-              : "opacity-100 translate-y-0 scale-100",
             "text-[18px] leading-[24px] font-semibold text-[#333] bg-white",
             "shadow-[0_20px_30px_0_rgba(0,0,0,0.05)]",
             "border border-[#eee]",

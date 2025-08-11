@@ -1,6 +1,8 @@
 "use client";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useRef, useState } from "react";
+import { useFundraiseStore } from "@/stores/fundraiseStore";
+import { fetcher } from "@/libs/fetcher";
 
 const RecordingVideoPage: React.FC = () => {
   const [refreshCamera, setRefreshCamera] = useState(0);
@@ -14,9 +16,13 @@ const RecordingVideoPage: React.FC = () => {
   const [recordedBlob, setRecordedBlob] = useState<Blob | null>(null);
   const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [uploading, setUploading] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const router = useRouter();
+  const setAnswer = useFundraiseStore((state) => state.setAnswer);
+  const questions = useFundraiseStore((state) => state.questions);
+  const answers = useFundraiseStore((state) => state.answers);
 
   useEffect(() => {
     setShowTyping(true);
@@ -27,29 +33,15 @@ const RecordingVideoPage: React.FC = () => {
     return () => clearTimeout(timer);
   }, []);
 
-  // Tự động hỏi quyền truy cập camera/microphone khi vào trang
-useEffect(() => {
-  if (!visible) return;
-  let previewStream: MediaStream | null = null;
-  let permissionChecked = false;
-  async function checkAndAskCameraPermission() {
-    // Kiểm tra trạng thái quyền camera
-    if (navigator.permissions) {
-      try {
-        const result = await navigator.permissions.query({ name: "camera" as PermissionName });
-        if (result.state === "granted") {
-          // Đã có quyền, lấy stream luôn
-          previewStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" }, audio: false });
-          setHasPermission(true);
-          setMediaStream(previewStream);
-          if (videoRef.current) {
-            videoRef.current.srcObject = previewStream;
-            videoRef.current.play();
-          }
-          permissionChecked = true;
-        } else if (result.state === "prompt" || result.state === "denied") {
-          // Chưa có quyền hoặc bị từ chối, hỏi lại
-          try {
+  useEffect(() => {
+    if (!visible) return;
+    let previewStream: MediaStream | null = null;
+    let permissionChecked = false;
+    async function checkAndAskCameraPermission() {
+      if (navigator.permissions) {
+        try {
+          const result = await navigator.permissions.query({ name: "camera" as PermissionName });
+          if (result.state === "granted") {
             previewStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" }, audio: false });
             setHasPermission(true);
             setMediaStream(previewStream);
@@ -58,17 +50,43 @@ useEffect(() => {
               videoRef.current.play();
             }
             permissionChecked = true;
+          } else if (result.state === "prompt" || result.state === "denied") {
+            try {
+              previewStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" }, audio: false });
+              setHasPermission(true);
+              setMediaStream(previewStream);
+              if (videoRef.current) {
+                videoRef.current.srcObject = previewStream;
+                videoRef.current.play();
+              }
+              permissionChecked = true;
+            } catch (err) {
+              setHasPermission(false);
+              setMediaStream(null);
+              if (videoRef.current) {
+                videoRef.current.srcObject = null;
+              }
+              permissionChecked = true;
+            }
+          }
+        } catch (err) {
+          try {
+            previewStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" }, audio: false });
+            setHasPermission(true);
+            setMediaStream(previewStream);
+            if (videoRef.current) {
+              videoRef.current.srcObject = previewStream;
+              videoRef.current.play();
+            }
           } catch (err) {
             setHasPermission(false);
             setMediaStream(null);
             if (videoRef.current) {
               videoRef.current.srcObject = null;
             }
-            permissionChecked = true;
           }
         }
-      } catch (err) {
-        // Nếu không kiểm tra được permission, fallback hỏi luôn
+      } else {
         try {
           previewStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" }, audio: false });
           setHasPermission(true);
@@ -85,37 +103,18 @@ useEffect(() => {
           }
         }
       }
-    } else {
-      // Trình duyệt không hỗ trợ navigator.permissions, hỏi luôn
-      try {
-        previewStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" }, audio: false });
-        setHasPermission(true);
-        setMediaStream(previewStream);
-        if (videoRef.current) {
-          videoRef.current.srcObject = previewStream;
-          videoRef.current.play();
-        }
-      } catch (err) {
-        setHasPermission(false);
-        setMediaStream(null);
-        if (videoRef.current) {
-          videoRef.current.srcObject = null;
-        }
+    }
+    checkAndAskCameraPermission();
+    return () => {
+      if (previewStream) {
+        previewStream.getTracks().forEach((track) => track.stop());
       }
-    }
-  }
-  checkAndAskCameraPermission();
-  return () => {
-    if (previewStream) {
-      previewStream.getTracks().forEach((track) => track.stop());
-    }
-    if (videoRef.current) {
-      videoRef.current.srcObject = null;
-    }
-  };
-}, [visible, refreshCamera, recordedBlob]);
+      if (videoRef.current) {
+        videoRef.current.srcObject = null;
+      }
+    };
+  }, [visible, refreshCamera, recordedBlob]);
 
-  // Countdown before recording
   useEffect(() => {
     let interval: NodeJS.Timeout;
     if (countdown !== null && countdown > 0) {
@@ -127,10 +126,8 @@ useEffect(() => {
       startRecording();
     }
     return () => clearInterval(interval);
-    // eslint-disable-next-line
   }, [countdown]);
 
-  // Recording timer
   useEffect(() => {
     if (isRecording) {
       timerRef.current = setInterval(() => {
@@ -148,10 +145,8 @@ useEffect(() => {
     return () => {
       if (timerRef.current) clearInterval(timerRef.current);
     };
-    // eslint-disable-next-line
   }, [isRecording]);
 
-  // Start camera and recording
   const startRecording = async () => {
     setRecordedBlob(null);
     setPreviewUrl(null);
@@ -174,7 +169,6 @@ useEffect(() => {
         const blob = new Blob(chunks, { type: "video/webm" });
         setRecordedBlob(blob);
         setPreviewUrl(URL.createObjectURL(blob));
-        // Sau khi stop, chuyển về camera preview nếu muốn
         if (videoRef.current) {
           videoRef.current.srcObject = null;
         }
@@ -186,7 +180,6 @@ useEffect(() => {
     }
   };
 
-  // Stop camera and recording
   const stopRecording = () => {
     setIsRecording(false);
     setRecordTime(60);
@@ -199,7 +192,6 @@ useEffect(() => {
     }
   };
 
-  // Clean up preview URL when component unmounts
   useEffect(() => {
     return () => {
       if (previewUrl) URL.revokeObjectURL(previewUrl);
@@ -244,7 +236,7 @@ useEffect(() => {
                   playsInline
                 />
                 {countdown !== null && countdown > 0 && (
-                  <div className="absolute inset-0 flex items-center justify-center z-10" style={{background: 'rgba(244,244,244,0.35)', backdropFilter: 'blur(6px)'}}>
+                  <div className="absolute inset-0 flex items-center justify-center z-10" style={{ background: 'rgba(244,244,244,0.35)', backdropFilter: 'blur(6px)' }}>
                     <span className="text-[64px] font-bold text-[#EB008C] drop-shadow-lg">{countdown}</span>
                   </div>
                 )}
@@ -271,9 +263,31 @@ useEffect(() => {
               <button
                 className="cursor-pointer w-full bg-[#EB008C] text-white text-[18px] font-semibold rounded-lg shadow hover:bg-[#c90074] transition-all duration-200"
                 style={{ height: "38px", paddingTop: 0, paddingBottom: 0 }}
-                onClick={() => router.push("/fundraise/new/tags-describe")}
+                disabled={uploading}
+                onClick={async () => {
+                  if (!recordedBlob) return;
+                  setUploading(true);
+                  try {
+                    const formData = new FormData();
+                    formData.append("file", recordedBlob, "thankyou.webm");
+                    const data = await fetcher("/upload", {
+                      method: "POST",
+                      body: formData,
+                    });
+                    if (data.status && data.url) {
+                      setAnswer(20, { answer: "", fileUrl: data.url });
+                      router.push("/fundraise/new/tags-describe");
+                    } else {
+                      alert("Upload failed!");
+                    }
+                  } catch (err) {
+                    alert("Upload failed!");
+                  } finally {
+                    setUploading(false);
+                  }
+                }}
               >
-                PROCEED WITH VIDEO
+                {uploading ? "UPLOADING..." : "PROCEED WITH VIDEO"}
               </button>
               <button
                 className="cursor-pointer w-full bg-[#f4f4f4] text-[#EB008C] text-[18px] font-semibold rounded-lg shadow hover:bg-[#e0e0e0] transition-all duration-200"
