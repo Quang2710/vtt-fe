@@ -4,7 +4,21 @@ export async function fetcher<T = any>(
   endpoint: string,
   init?: RequestInit,
 ): Promise<T> {
-  const res = await fetch(`${API_BASE_URL}${endpoint}`, init);
+  let token: string | undefined = undefined;
+  if (typeof document !== "undefined") {
+    const match = document.cookie.match(/(^| )token=([^;]+)/);
+    token = match ? match[2] : undefined;
+  }
+
+  const headers = {
+    ...(init?.headers || {}),
+    ...(token ? { Authorization: `Bearer ${token}` } : {}),
+  };
+
+  const res = await fetch(`${API_BASE_URL}${endpoint}`, {
+    ...init,
+    headers,
+  });
 
   if (!res.ok) {
     const message = `Fetch error: ${res.status} ${res.statusText}`;

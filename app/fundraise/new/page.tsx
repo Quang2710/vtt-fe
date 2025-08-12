@@ -49,18 +49,8 @@ const NewFundraisePage: React.FC = () => {
         if (localQuestions) {
             const parsed = JSON.parse(localQuestions);
             setQuestions(parsed);
-            console.log("Questions from localStorage:", parsed);
         } else {
-            let token: string | undefined = undefined;
-            if (typeof document !== "undefined") {
-                const match = document.cookie.match(/(^| )token=([^;]+)/);
-                token = match ? match[2] : undefined;
-            }
-            fetcher('/fundraiser/create', {
-                headers: {
-                    'Authorization': token ? `Bearer ${token}` : '',
-                },
-            })
+            fetcher('/fundraiser/create')
                 .then(data => {
                     if (data.Questions) {
                         setQuestions(data.Questions);

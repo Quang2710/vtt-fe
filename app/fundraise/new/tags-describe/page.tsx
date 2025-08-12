@@ -80,11 +80,7 @@ const TagDescribePage: React.FC = () => {
       const match = document.cookie.match(/(^| )token=([^;]+)/);
       token = match ? match[2] : undefined;
     }
-    fetcher("/tags/get", {
-      headers: {
-        Authorization: token ? `Bearer ${token}` : "",
-      },
-    })
+    fetcher("/tags/get")
       .then((res) => {
         if (res.Tags) {
           setTagOptions(
