@@ -6,6 +6,7 @@ import { LuBookHeart } from "react-icons/lu";
 import { PiHandHeartDuotone } from "react-icons/pi";
 import Image from "next/image";
 import { useEffect, useState } from "react";
+import { fetcher } from "@/libs/fetcher";
 
 
 export default function FundraisePage() {
@@ -13,9 +14,7 @@ export default function FundraisePage() {
     useEffect(() => {
         async function fetchData() {
             try {
-                const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/setting/example-fundraises`);
-                if (!res.ok) throw new Error('Failed to fetch fundraisers');
-                const json = await res.json();
+                const json = await fetcher(`/setting/example-fundraises`);
                 setExampleFun(json)
             } catch (err: any) {
             } finally {
@@ -24,7 +23,6 @@ export default function FundraisePage() {
         }
         fetchData();
     }, []);
-    console.log('_exampleFun', exampleFun)
     return (
         <div className="fundraise-landing w-full h-full overflow-hidden">
             <div className="fundraise-landing__section fundraise-landing__section--intro py-[40px] text-[#fff] bg-[#f4f4f4] flex flex-col items-center justify-center">
