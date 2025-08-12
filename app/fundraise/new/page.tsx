@@ -10,7 +10,7 @@ type FundraiseState = {
     questions: Question[];
     setQuestions: (questions: Question[]) => void;
 };
- const useFundraiseStore = create<FundraiseState>((set) => ({
+const useFundraiseStore = create<FundraiseState>((set) => ({
     questions: [],
     setQuestions: (questions) => set({ questions }),
 }));
@@ -45,20 +45,18 @@ const NewFundraisePage: React.FC = () => {
     }, [visibleCount]);
 
     useEffect(() => {
-        const localQuestions = typeof window !== "undefined" ? localStorage.getItem("fundraiseQuestions") : null;
-        if (localQuestions) {
-            const parsed = JSON.parse(localQuestions);
-            setQuestions(parsed);
-        } else {
-            fetcher('/fundraiser/create')
-                .then(data => {
-                    if (data.Questions) {
-                        setQuestions(data.Questions);
-                        localStorage.setItem("fundraiseQuestions", JSON.stringify(data.Questions));
-                        console.log("Questions from API:", data.Questions);
-                    }
-                });
+        let token: string | undefined = undefined;
+        if (typeof document !== "undefined") {
+            const match = document.cookie.match(/(^| )token=([^;]+)/);
+            token = match ? match[2] : undefined;
         }
+        fetcher('/fundraiser/create')
+            .then(data => {
+                if (data.Questions) {
+                    setQuestions(data.Questions);
+                    localStorage.setItem("fundraiseQuestions", JSON.stringify(data.Questions));
+                }
+            });
     }, [setQuestions]);
 
     const router = useRouter();
