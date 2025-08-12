@@ -3,9 +3,11 @@ import "./globals.css";
 import DynamicHeader from "@/components/layout/dynamic-header";
 import DynamicFooter from "@/components/layout/dynamic-footer";
 import HelpButton from "@/components/help";
+import SessionExpiredModal from "@/components/SessionExpiredModal";
+
 const lexendDeca = Lexend_Deca({
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700"], // choose the weights you need
+  weight: ["400", "500", "600", "700"],
   display: "swap",
 });
 
@@ -18,6 +20,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className={lexendDeca.className}>
       <body>
+        <SessionExpiredModal /> 
         <DynamicHeader />
         {children}
         <DynamicFooter />
