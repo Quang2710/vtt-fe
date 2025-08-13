@@ -21,8 +21,7 @@ export async function fetcher<T = any>(
 
   const res = await fetch(`${API_BASE_URL}${endpoint}`, {
     ...restInit,
-    headers: headers || {},
-    credentials: "include",
+    headers,
   });
 
   if (res.status === 401 || res.status === 403) {
