@@ -44,7 +44,6 @@ export default function AuthTabs() {
         document.cookie = `token=${token}; path=/; max-age=604800`;
         if (res.userInfo) {
           useUserStore.getState().setUser(res.userInfo);
-          console.log("userInfo in zustand:", useUserStore.getState().user);
         }
         window.location.href = "/";
       }
@@ -67,7 +66,6 @@ export default function AuthTabs() {
         document.cookie = `token=${token}; path=/; max-age=604800`;
         if (res.userInfo) {
           useUserStore.getState().setUser(res.userInfo);
-          console.log("userInfo in zustand:", useUserStore.getState().user);
         }
         window.location.href = "/";
       }

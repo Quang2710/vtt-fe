@@ -2,13 +2,23 @@
 
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { fetcher } from "@/libs/fetcher";
+import { useUserStore } from "@/stores/userStore";
 
 export default function AuthCallbackPage() {
   const router = useRouter();
 
   useEffect(() => {
-    // No token needed, cookie is set by backend
-    router.replace("/");
+    async function fetchUserAndRedirect() {
+      try {
+        const user = await fetcher("/auth/get-user");
+        useUserStore.getState().setUser(user);
+        router.replace("/");
+      } catch {
+        router.replace("/login");
+      }
+    }
+    fetchUserAndRedirect();
   }, [router]);
 
   return (

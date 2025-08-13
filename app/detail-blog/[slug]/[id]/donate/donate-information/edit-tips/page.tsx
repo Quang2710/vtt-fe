@@ -15,7 +15,7 @@ const EditTipsPage = () => {
   // Hàm xử lý khi chọn tip
   const handleTipSelect = (tip: any) => {
     router.push(
-      `/detail-blog/${slug}/donate/donate-information?amount=${customAmount}&tip=${tip}`
+      `/detail-blog/${slug}/${params.id}/donate/donate-information?amount=${customAmount}&tip=${tip}`
     );
   };
 

@@ -35,7 +35,7 @@ const ThankForDonationPage = () => {
                     <p className="text-left text-[14px] text-black">
                         "Share a testimonial so that others can know more about them."</p>
                     <div className="w-full flex justify-center mt-2">
-                        <Link href={`/detail-blog/${slug}/donate/donate-information/thank-for-donation/write-testimonial`} className="w-full">
+                        <Link href={`/detail-blog/${slug}/${params.id}/donate/donate-information/thank-for-donation/write-testimonial`} className="w-full">
                             <button className="w-full cursor-pointer px-6 py-2 bg-pink-600 text-white font-bold rounded-lg shadow hover:opacity-90 transition-all">
                                 WRITE TESTIMONIAL
                             </button>
