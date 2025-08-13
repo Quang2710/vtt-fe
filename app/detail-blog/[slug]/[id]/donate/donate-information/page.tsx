@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { CiCreditCard1 } from "react-icons/ci";
 import { FaCcAmex } from "react-icons/fa";
@@ -12,14 +12,58 @@ const DonateInformationPage = () => {
   const tipAmount = searchParams.get("tip") || "12";
   const [customAmount, setCustomAmount] = useState(amount || "");
   const [tip, setTip] = useState(tipAmount);
+  const [fullName, setFullName] = useState("");
+  const [email, setEmail] = useState("");
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const savedName = localStorage.getItem("donorFullName");
+      const savedEmail = localStorage.getItem("donorEmail");
+      if (savedName) setFullName(savedName);
+      if (savedEmail) setEmail(savedEmail);
+    }
+  }, []);
 
   const formatNumber = (value: string) => {
     const num = Number(value.replace(/,/g, ""));
     return num ? num.toLocaleString() : "";
   };
+ 
 
   const params = useParams();
   const slug = params?.slug || "";
+  const id = params?.id || "";
+  const validate = () => {
+    if (!fullName.trim()) {
+      setError("Full name is required.");
+      return false;
+    }
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!email.trim()) {
+      setError("Email is required.");
+      return false;
+    }
+    if (!emailRegex.test(email)) {
+      setError("Please enter a valid email address.");
+      return false;
+    }
+    setError("");
+    return true;
+  };
+
+  const handleDonate = () => {
+    if (!validate()) return;
+    // Lưu lại giá trị khi donate
+    if (typeof window !== "undefined") {
+      localStorage.setItem("donorFullName", fullName);
+      localStorage.setItem("donorEmail", email);
+    }
+    router.push(
+      `/detail-blog/${slug}/${params.id}/donate/donate-information/donate-with-credit?amount=${customAmount || amount}&tip=${tip}&name=${encodeURIComponent(fullName)}&email=${encodeURIComponent(email)}`
+    );
+  };
+
   return (
     <div className="w-full max-w-2xl mx-auto px-4 py-10">
       <p className="text-[16px] text-[#333]">
@@ -79,7 +123,7 @@ const DonateInformationPage = () => {
               className="text-pink-600 font-bold text-[14px] cursor-pointer"
               onClick={() =>
                 router.push(
-                  `/detail-blog/${slug}/donate/donate-information/edit-tips?amount=${customAmount}`
+                  `/detail-blog/${slug}/${params.id}/donate/donate-information/edit-tips?amount=${customAmount}`
                 )
               }
             >
@@ -103,6 +147,8 @@ const DonateInformationPage = () => {
       <input
         type="text"
         placeholder="Enter your full name"
+        value={fullName}
+        onChange={(e) => setFullName(e.target.value)}
         className="w-full text-[14px] font-normal leading-[20px] rounded-[10px] 
           shadow-[inset_0_2px_3px_0_rgba(0,0,0,0.1)]
           bg-white
@@ -119,6 +165,8 @@ const DonateInformationPage = () => {
       <input
         type="text"
         placeholder="Enter your email"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
         className="w-full text-[14px] font-normal leading-[20px] rounded-[10px] 
           shadow-[inset_0_2px_3px_0_rgba(0,0,0,0.1)]
           bg-white
@@ -131,9 +179,9 @@ const DonateInformationPage = () => {
           focus:border-pink-600
         "
       />
-      <p className="text-[14px] text-[#666] mt-[20px]">
-        You will receive an email receipt for your donation.
-      </p>
+      {error && (
+        <div className="text-red-600 text-sm mt-2">{error}</div>
+      )}
       <div className="donate-amount-step__container border-t border-[#eee] mt-[30px]">
         <div className="donate-amount-step__donor-info py-[20px] my-0">
           <div className="flex flex-col gap-4">
@@ -161,9 +209,7 @@ const DonateInformationPage = () => {
       <div className="flex flex-col gap-4 mt-8">
         <button
           className="w-full h-10 py-0 cursor-pointer rounded-[10px] bg-pink-600 text-white text-[14px] font-bold transition-all duration-200 hover:bg-pink-700 hover:scale-105 flex items-center justify-center gap-2"
-          onClick={() => {
-            router.push(`/detail-blog/${slug}/donate/donate-information/donate-with-credit?amount=${customAmount || amount}`);
-          }}
+          onClick={handleDonate}
         >
           <CiCreditCard1 className="w-6 h-6" />
           DONATE WITH CREDIT/DEBIT CARD

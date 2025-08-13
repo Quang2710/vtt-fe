@@ -23,19 +23,10 @@ import { PiAmbulanceBold } from "react-icons/pi";
 import { TbShieldLock } from "react-icons/tb";
 import { VscVerifiedFilled } from "react-icons/vsc";
 import Link from "next/link";
-import { useParams } from "next/navigation";
+import { useParams, useSearchParams } from "next/navigation";
 import Slider from "react-slick";
 
 const DetailPage = () => {
-  //   useEffect(() => {
-  //     if (id) {
-  //       fetch(`/api/campaigns/${id}`)
-  //         .then(res => res.json())
-  //         .then(setData);
-  //     }
-  //   }, [id]);
-
-  // if (!data) return <div>Loading...</div>;
   const settings = {
     dots: false,
     arrows: false,
@@ -60,7 +51,19 @@ const DetailPage = () => {
     ],
   };
   const params = useParams();
+  const searchParams = useSearchParams();
   const slug = params?.slug || "";
+  const id = searchParams.get("id");
+  const [copied, setCopied] = useState(false);
+
+  const handleCopy = () => {
+    const url = typeof window !== "undefined" ? window.location.href : "";
+    navigator.clipboard.writeText(url).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1500); // Reset after 1.5s
+    });
+  };
+
   return (
     <div className="blog-container w-full bg-gray-100">
       <div className="campaign-page__container mx-[10%] p-[20px] flex flex-col gap-4 sm:flex-row sm:flex-nowrap ">
@@ -108,7 +111,7 @@ const DetailPage = () => {
                 />
               </div>
               <div className="w-full sm:w-[30%] object-cover cursor-pointer flex justify-center sm:justify-end items-center mt-2 sm:mt-0">
-                <Link href={`/detail-blog/${slug}/list-photo`}>
+                <Link href={`/detail-blog/${slug}/${id}/list-photo`}>
                   <span className="p-[10px] h-[50px] text-pink-600 font-medium flex justify-center items-center whitespace-nowrap rounded-[10px] border border-gray-300 w-full sm:w-auto">
                     SEE MORE PHOTOS
                   </span>
@@ -245,15 +248,18 @@ const DetailPage = () => {
 
             <div className="flex gap-3 mt-6">
               <div className="flex flex-col gap-3 w-full">
-                <Link href={`/detail-blog/${slug}/donate`}>
+                <Link href={`/detail-blog/${slug}/${id}/donate`}>
                   <button className="w-full cursor-pointer bg-[#EB008C] text-white font-semibold py-2 rounded-[8px] shadow transition duration-200 hover:bg-[#c20074] hover:scale-105 flex items-center justify-center gap-2">
                     <GiSelfLove className="text-[20px]" />
                     Please Donate
                   </button>
                 </Link>
-                <button className="w-full cursor-pointer bg-[#00b49b] text-white font-semibold py-2 rounded-[8px] shadow transition duration-200 hover:bg-[#008f7a] hover:scale-105 flex items-center justify-center gap-2">
+                <button
+                  className="w-full cursor-pointer bg-[#00b49b] text-white font-semibold py-2 rounded-[8px] shadow transition duration-200 hover:bg-[#008f7a] hover:scale-105 flex items-center justify-center gap-2"
+                  onClick={handleCopy}
+                >
                   <IoMdCopy className="text-[20px]" />
-                  Copy Link Share
+                  {copied ? "Copied!" : "Copy Link Share"}
                 </button>
               </div>
             </div>
@@ -445,7 +451,7 @@ const DetailPage = () => {
             </div>
           </div>
 
-          <Link href={`/detail-blog/${slug}/contact`}>
+          <Link href={`/detail-blog/${slug}/${id}/contact`}>
             <div className="campaign-support bg-white p-[16px] rounded-[10px] mt-[20px] flex items-center justify-between cursor-pointer no-underline">
               <h3 className="text-[16px] text-[#444] font-bold">
                 Contact Support

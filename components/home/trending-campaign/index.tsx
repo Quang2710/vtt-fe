@@ -6,6 +6,8 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { useEffect, useState } from "react";
 import { fetcher } from "@/libs/fetcher";
+import slugify from "@/libs/slugify";
+import { useRouter } from "next/navigation";
 
 
 const TrendingCampaigns = () => {
@@ -32,18 +34,25 @@ const TrendingCampaigns = () => {
             },
         ],
     };
-
-    const [campaigns, setCampaigns] = useState([]);
+    const router = useRouter();
+    const [campaigns, setCampaigns] = useState<Campaigns[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-
+    type Campaigns = {
+        id: number;
+        title: string;
+        description: string;
+        image: string;
+        article_link?: string | null;
+        status: string;
+    };
     useEffect(() => {
         fetcher("/setting/trending_campaign")
-            .then((data:any) => {
+            .then((data: any) => {
                 setCampaigns(data);
                 setLoading(false);
             })
-            .catch((err:any) => {
+            .catch((err: any) => {
                 setError(err);
                 setLoading(false);
             });
@@ -70,8 +79,8 @@ const TrendingCampaigns = () => {
                     <div className="text-center py-10 text-red-500">Error loading campaigns.</div>
                 ) : (
                     <Slider {...settings}>
-                        {campaigns.map((c:any) => (
-                            <div key={c.id} className="px-2">
+                        {campaigns.map((c: any) => (
+                            <div key={c.id} className="px-2" onClick={() => router.push(`/detail-blog/${slugify(c.name)}?id=${c.id}`)}>
                                 <div className="rounded-xl overflow-hidden bg-white shadow hover:shadow-lg transition cursor-pointer">
                                     <div className="relative w-full h-48">
                                         <Image
@@ -83,7 +92,6 @@ const TrendingCampaigns = () => {
                                     </div>
 
                                     <div className="p-4">
-                                        {/* Verified badge if needed */}
                                         {c.is_featured && (
                                             <p className="text-green-600 font-semibold text-sm mb-1">
                                                 ✅ VERIFIED

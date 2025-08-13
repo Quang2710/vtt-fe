@@ -4,10 +4,12 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { useEffect, useState } from "react";
 import { fetcher } from "@/libs/fetcher";
-
+import { useRouter } from "next/navigation";
+import slugify from "@/libs/slugify";
 
 const Donated = () => {
-       const settings = {
+    const router = useRouter();
+    const settings = {
         dots: false,
         arrows: false,
         infinite: false,
@@ -48,16 +50,25 @@ const Donated = () => {
     }, []);
     return (
         <div className="max-w-7xl mx-auto overflow-x-auto pb-4">
-            <p className="w-full text-center text-[#666] text-[16px] py-[50px]">Make your first donation today and join our community of Givers!</p>
+            <p className="w-full text-center text-[#666] text-[16px] py-[50px]">
+                Make your first donation today and join our community of Givers!
+            </p>
             {loading ? (
                 <div className="text-center py-10 text-gray-500">Loading...</div>
             ) : error ? (
-                <div className="text-center py-10 text-red-500">Error loading campaigns.</div>
+                <div className="text-center py-10 text-red-500">
+                    Error loading campaigns.
+                </div>
             ) : (
                 <Slider {...settings}>
                     {campaigns.map((c: any) => (
                         <div key={c.id} className="px-2">
-                            <div className="rounded-xl overflow-hidden bg-white shadow hover:shadow-lg transition cursor-pointer">
+                            <div
+                                className="rounded-xl overflow-hidden bg-white shadow hover:shadow-lg transition cursor-pointer"
+                                onClick={() =>
+                                    router.push(`/detail-blog/${slugify(c.name)}?id=${c.id}`)
+                                }
+                            >
                                 <div className="relative w-full h-48">
                                     <Image
                                         src={c.image}
@@ -68,7 +79,6 @@ const Donated = () => {
                                 </div>
 
                                 <div className="p-4">
-                                    {/* Verified badge if needed */}
                                     {c.is_featured && (
                                         <p className="text-green-600 font-semibold text-sm mb-1">
                                             ✅ VERIFIED
@@ -82,19 +92,6 @@ const Donated = () => {
                                     <p className="text-sm text-gray-600 mb-3 line-clamp-3">
                                         {c.description}
                                     </p>
-
-                                    {/* <p className="text-xs text-gray-500 mb-2">By {c.author}</p> */}
-
-                                    {/* <div className="h-2 bg-gray-200 rounded-full overflow-hidden mb-2">
-                                            <div
-                                                className="bg-pink-600 h-full"
-                                                style={{ width: `${c.percent}%` }}
-                                            />
-                                        </div>
-                                        <p className="text-xs text-black font-semibold">
-                                            RAISED <span className="text-gray-800">{c.raised}</span>{" "}
-                                            <span className="text-gray-400">OF {c.goal}</span>
-                                        </p> */}
                                 </div>
                             </div>
                         </div>
@@ -103,6 +100,6 @@ const Donated = () => {
             )}
         </div>
     );
-}
+};
 
 export default Donated;
