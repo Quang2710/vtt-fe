@@ -54,6 +54,7 @@ const SubmitCampaignPage: React.FC = () => {
     try {
       await fetcher("/fundraiser/create", {
         method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ answers: answerArr }),
       });
       if (typeof window !== "undefined") {
