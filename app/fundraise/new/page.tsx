@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation';
 import { IoIosArrowForward } from 'react-icons/io';
 import { create } from "zustand";
 import { fetcher } from '@/libs/fetcher';
+import { useSessionExpiredCheck } from '@/hooks/useSessionExpiredCheck';
 
 type Question = { id: number; name: string };
 type FundraiseState = {
@@ -22,6 +23,7 @@ const messages = [
 ];
 
 const NewFundraisePage: React.FC = () => {
+    useSessionExpiredCheck()
     const [visibleCount, setVisibleCount] = useState(0);
     const [showTyping, setShowTyping] = useState(true);
     const [animatingIdx, setAnimatingIdx] = useState(-1);
