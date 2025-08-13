@@ -1,10 +1,10 @@
 "use client";
 import { useAuthStore } from "@/stores/authStore";
 
-const SessionExpiredModal = () => {
+const SessionExpiredModal = ({ open }: { open: boolean }) => {
   const sessionExpired = useAuthStore((s) => s.sessionExpired);
 
-  if (!sessionExpired) return null;
+  if (!open || !sessionExpired) return null;
 
   return (
     <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/60">

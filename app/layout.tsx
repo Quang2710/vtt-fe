@@ -3,7 +3,6 @@ import "./globals.css";
 import DynamicHeader from "@/components/layout/dynamic-header";
 import DynamicFooter from "@/components/layout/dynamic-footer";
 import HelpButton from "@/components/help";
-import SessionExpiredModal from "@/components/SessionExpiredModal";
 
 const lexendDeca = Lexend_Deca({
   subsets: ["latin"],
@@ -20,7 +19,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className={lexendDeca.className}>
       <body>
-        <SessionExpiredModal /> 
         <DynamicHeader />
         {children}
         <DynamicFooter />
