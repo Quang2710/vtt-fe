@@ -3,6 +3,7 @@ import "./globals.css";
 import DynamicHeader from "@/components/layout/dynamic-header";
 import DynamicFooter from "@/components/layout/dynamic-footer";
 import HelpButton from "@/components/help";
+import { Providers } from "@/libs/providers";
 
 const lexendDeca = Lexend_Deca({
   subsets: ["latin"],
@@ -15,14 +16,20 @@ export const metadata = {
   description: "WTT FE",
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <html lang="en" className={lexendDeca.className}>
       <body>
-        <DynamicHeader />
-        {children}
-        <DynamicFooter />
-        <HelpButton />
+        <Providers>
+          <DynamicHeader />
+          {children}
+          <DynamicFooter />
+          <HelpButton />
+        </Providers>
       </body>
     </html>
   );

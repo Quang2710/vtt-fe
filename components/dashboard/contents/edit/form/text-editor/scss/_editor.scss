@@ -1,0 +1,285 @@
+@import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600');
+
+$color--black         : rgb(51, 51, 51);
+$color--brownish-grey : rgb(102, 102, 102);
+$color--light-grey    : rgb(221, 221, 221);
+$color--white-outline : rgb(238, 238, 238);
+$color--white-bg      : rgb(244, 244, 244);
+$color--white         : rgb(255, 255, 255);
+$color--dark-peach    : rgb(236, 112, 112);
+
+$font-weight--light: 300;
+$font-weight--normal: 400;
+$font-weight--bold: 600;
+
+$font-size--small: 12px;
+$font-size--medium: 14px;
+$font-size--body: 16px;
+$font-size--header: 20px;
+$font-size--quote: 30px;
+
+$line-height--body: 24px;
+$line-height--header: 30px;
+$line-height--quote: 40px;
+
+.editor-control {
+  font-family: 'Source Sans Pro', sans-serif;
+  padding-bottom: 20px;
+  padding-top: 15px;
+  position: relative;
+
+  &__expand-handle {
+    border-top: dashed 2px $color--white-outline;
+    cursor: pointer;
+    text-align: center;
+
+    &__button {
+      background-color: $color--white;
+      border: solid 1px $color--white-outline;
+      border-radius: 11px;
+      box-sizing: border-box;
+      color: $color--light-grey;
+      display: block;
+      font-size: $font-size--medium;
+      font-weight: $font-weight--bold;
+      left: 0;
+      line-height: 1.5;
+      margin: -13.5px auto 0 auto;
+      padding: 0 20px;
+      text-align: center;
+      width: 90px;
+    }
+
+    &:hover {
+      border-top: solid 2px $color--dark-peach;
+
+      .editor-control__expand-handle__button {
+        background-color: $color--dark-peach;
+        border-color: $color--dark-peach;
+        color: $color--white;
+      }
+    }
+  }
+
+  &__dashboard {
+    display: flex;
+    padding: 0 5px;
+
+    &__button {
+      border-radius: 8px;
+      color: $color--brownish-grey;
+      cursor: pointer;
+      flex: 1;
+      font-size: $font-size--small;
+      margin: 5px 0 10px 0;
+      padding: 10px;
+      text-align: center;
+
+      &:hover {
+        box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.1);
+      }
+
+      svg {
+        height: 30px;
+      }
+
+      p {
+        margin-top: 5px;
+      }
+    }
+  }
+}
+
+.editor-block {
+  color: $color--black;
+  font-family: 'Source Sans Pro', sans-serif;
+  font-style: normal;
+  font-stretch: normal;
+  letter-spacing: normal;
+  line-height: 1.5;
+  padding-bottom: 10px;
+  padding-top: 10px;
+
+  &__container {
+    position: relative;
+
+    &__delete-button {
+      background-color: $color--black;
+      border-radius: 4px;
+      box-sizing: border-box;
+      color: $color--white;
+      cursor: pointer;
+      display: inline-block;
+      line-height: 0;
+      opacity: 0.4;
+      padding: 5px;
+      position: absolute;
+      right: 5px;
+      top: -20px;
+
+      &:hover {
+        opacity: 0.7;
+      }
+    }
+
+    &__editor {
+      width: 100%;
+      box-shadow: none;
+      border: 0;
+      outline: none;
+      overflow: hidden;
+      resize: none;
+    }
+  }
+
+  &__image {
+    @keyframes spinner {
+      to {transform: rotate(360deg);}
+    }
+
+    &__loading-icon {
+      display: inline-block;
+      box-sizing: border-box;
+      vertical-align: middle;
+      width: 14px;
+      height: 14px;
+      margin-top: -4px;
+      margin-right: 5px;
+      border-radius: 10px;
+      border-style: solid;
+      border-width: 2px;
+      border-bottom-color: transparent;
+      animation: spinner 1.1s linear infinite;
+    }
+
+    &__upload-panel {
+      background-color: $color--white-bg;
+      border: solid 1px $color--white-outline;
+      border-radius: 4px;
+      color: $color--black;
+      cursor: pointer;
+      padding: 120px 30%;
+      text-align: center;
+
+      &--active {
+        background-color: $color--white-outline;
+      }
+
+      &__icon {
+        padding-bottom: 15px;
+      }
+
+      &__input {
+        display: none;
+      }
+
+      &__button {
+        display: none;
+      }
+    }
+
+    &__img {
+      border-radius: 4px;
+      max-width: 100%;
+    }
+  }
+
+  &__video {
+    &__upload-panel {
+      background-color: $color--white-bg;
+      border: solid 1px $color--white-outline;
+      border-radius: 4px;
+      color: $color--black;
+      text-align: center;
+
+      &--active {
+        background-color: $color--white-outline;
+      }
+
+      &__input-container {
+        background-color: $color--white;
+        border-radius: 10px;
+        box-shadow: inset 0 2px 3px 0 rgba(0, 0, 0, 0.1);
+        display: flex;
+        padding: 10px 15px;
+        margin: 10px 25px 40px 25px;
+
+        &__label {
+          padding-top: 10px;
+        }
+
+        &__icon {
+          font-size: 0;
+
+          svg {
+            height: 24px;
+            padding-right: 10px;
+          }
+        }
+
+        &__input {
+          border: none;
+          font-size: $font-size--body;
+          outline: none;
+          flex: 1;
+        }
+      }
+    }
+
+    &__img {
+      border-radius: 4px;
+      max-width: 100%;
+    }
+
+    iframe {
+      width: 100%;
+    }
+  }
+
+  &__header {
+    font-size: $font-size--header;
+    font-weight: $font-weight--bold;
+    line-height: $line-height--header;
+  }
+
+  &__body {
+    font-size: $font-size--body;
+    font-weight: $font-weight--normal;
+    line-height: $line-height--body;
+  }
+
+  &__quote {
+    border-left: solid 2px $color--white-outline;
+    box-sizing: border-box;
+    color: $color--brownish-grey;
+    font-size: $font-size--quote;
+    font-weight: $font-weight--light;
+    line-height: $line-height--quote;
+    padding-left: 20px;
+  }
+}
+.editor-control__dashboard__button {
+  border-radius: 8px;
+  color: $color--brownish-grey;
+  cursor: pointer;
+  flex: 1;
+  font-size: $font-size--small;
+  margin: 5px 0 10px 0;
+  padding: 10px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  &:hover {
+    box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.1);
+  }
+
+  svg {
+    height: 30px;
+  }
+
+  p {
+    margin-top: 5px;
+  }
+}
