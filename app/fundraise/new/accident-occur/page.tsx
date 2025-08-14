@@ -1,6 +1,7 @@
 "use client";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
+import { useFundraiseStore } from "@/stores/fundraiseStore";
 
 const DIAGNOSIS_OPTIONS = [
   { value: "this_week", label: "This week" },
@@ -32,8 +33,17 @@ const DiagnosisSelect: React.FC<{
 const AccidentOccurPage: React.FC = () => {
   const [visible, setVisible] = useState(false);
   const [showTyping, setShowTyping] = useState(true);
-  const [illness, setIllness] = useState("");
+  const answers = useFundraiseStore((state) => state.answers);
+  const [illness, setIllness] = useState(
+    typeof answers[13] === "object" && answers[13] !== null && "answer" in answers[13]
+      ? answers[13].answer
+      : (answers[13] as string) || ""
+  );
   const router = useRouter();
+
+  const questions = useFundraiseStore((state) => state.questions);
+  const setAnswer = useFundraiseStore((state) => state.setAnswer);
+  const question13 = questions.find(q => q.id === 13);
 
   useEffect(() => {
     setShowTyping(true);
@@ -57,13 +67,16 @@ const AccidentOccurPage: React.FC = () => {
       {visible && (
         <>
           <div className="w-full self-start transition-all duration-500 text-[18px] leading-[24px] font-semibold text-[#333] bg-white border border-[#eee] rounded-[12px] shadow-[0_20px_30px_0_rgba(0,0,0,0.05)] py-[15px] px-[25px] mb-[10px]">
-            When did this accident occur?
+            {question13?.name || "When did this accident occur?"}
           </div>
           <DiagnosisSelect value={illness} onChange={setIllness} />
           <button
             className="cursor-pointer w-full bg-[#EB008C] text-white text-[18px] font-semibold py-3 rounded-lg shadow hover:bg-[#c90074] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed mt-3"
             disabled={!illness.trim()}
-            onClick={() => router.push("/fundraise/new/state-of-treatment")}
+            onClick={() => {
+              setAnswer(13, { answer: illness, fileUrl: "" });
+              router.push("/fundraise/new/state-of-treatment");
+            }}
           >
             Next
           </button>

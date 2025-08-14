@@ -1,6 +1,6 @@
 'use client';
 import React, { useState } from "react";
-import { useRouter, usePathname } from "next/navigation";
+import { useRouter, usePathname, useParams } from "next/navigation";
 import { IoIosArrowForward } from "react-icons/io";
 import { FaUserShield } from "react-icons/fa";
 import { FiRefreshCcw } from "react-icons/fi";
@@ -15,6 +15,7 @@ const DonateTabs = () => {
     const [fade, setFade] = useState(true);
     const [customAmount, setCustomAmount] = useState("");
     const [customMonthlyAmount, setCustomMonthlyAmount] = useState("");
+    const params = useParams();
 
     const handleTabChange = (tab: string) => {
         setFade(false);
@@ -36,7 +37,7 @@ const DonateTabs = () => {
                 >
                     DONATE ONCE
                 </button>
-                <button
+                {/* <button
                     className={`cursor-pointer flex-1 py-2 text-center font-semibold transition-colors duration-150 bg-white ${activeTab === "monthly"
                             ? "text-pink-600"
                             : "text-gray-500"
@@ -44,9 +45,9 @@ const DonateTabs = () => {
                     onClick={() => handleTabChange("monthly")}
                 >
                     DONATE MONTHLY
-                </button>
+                </button> */}
                 <span
-                    className={`absolute bottom-0 h-0.5 bg-pink-600 rounded transition-all duration-300 w-1/2 ${activeTab === 'once' ? 'left-0' : 'left-1/2'}`}
+                    className={`absolute bottom-0 h-0.5 bg-pink-600 rounded transition-all duration-300 w-full ${activeTab === 'once' ? 'left-0' : 'left-1/2'}`}
                 />
             </div>
             <div className={`p-2 sm:p-4 bg-white transition-opacity duration-300 ${fade ? 'opacity-100' : 'opacity-0'}`} key={activeTab}>
@@ -60,7 +61,7 @@ const DonateTabs = () => {
                                     style={{ willChange: 'transform, box-shadow, background' }}
                                     onClick={() => {
                                         if (slug) {
-                                            router.push(`/detail-blog/${slug}/donate/donate-information?amount=${amount}`);
+                                            router.push(`/detail-blog/${slug}/${params.id}/donate/donate-information?amount=${amount}`);
                                         }
                                     }}
                                 >
@@ -106,7 +107,7 @@ const DonateTabs = () => {
                                     className="cursor-pointer mt-4 w-full bg-pink-600 text-[14px] text-white font-semibold py-2 rounded-[10px] shadow transition-all duration-200 hover:bg-pink-600 hover:scale-105 hover:shadow-lg"
                                     onClick={() => {
                                         if (slug && customAmount && Number(customAmount) > 0) {
-                                            router.push(`/detail-blog/${slug}/donate/donate-information?amount=${customAmount}`);
+                                            router.push(`/detail-blog/${slug}/${params.id}/donate/donate-information?amount=${customAmount}`);
                                         }
                                     }}
                                 >
@@ -154,7 +155,7 @@ const DonateTabs = () => {
                                     style={{ willChange: 'transform, box-shadow, background' }}
                                     onClick={() => {
                                         if (slug) {
-                                            router.push(`/detail-blog/${slug}/donate/donate-information?amount=${option.amount}`);
+                                            router.push(`/detail-blog/${slug}/${params.id}/donate/donate-information?amount=${option.amount}`);
                                         }
                                     }}
                                 >
@@ -190,7 +191,7 @@ const DonateTabs = () => {
                                     className="cursor-pointer mt-4 w-full bg-pink-600 text-[14px] text-white font-semibold py-2 rounded-[10px] shadow transition-all duration-200 hover:bg-pink-600 hover:scale-105 hover:shadow-lg"
                                     onClick={() => {
                                         if (slug) {
-                                            router.push(`/detail-blog/${slug}/donate/donate-information`);
+                                            router.push(`/detail-blog/${slug}/${params.id}/donate/donate-information`);
                                         }
                                     }}
                                 >

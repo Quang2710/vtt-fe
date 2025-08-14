@@ -2,6 +2,19 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { IoIosArrowForward } from 'react-icons/io';
+import { create } from "zustand";
+import { fetcher } from '@/libs/fetcher';
+import { useSessionExpiredCheck } from '@/hooks/useSessionExpiredCheck';
+
+type Question = { id: number; name: string };
+type FundraiseState = {
+    questions: Question[];
+    setQuestions: (questions: Question[]) => void;
+};
+const useFundraiseStore = create<FundraiseState>((set) => ({
+    questions: [],
+    setQuestions: (questions) => set({ questions }),
+}));
 
 const messages = [
     'Hello vũ Quang!',
@@ -10,9 +23,12 @@ const messages = [
 ];
 
 const NewFundraisePage: React.FC = () => {
+    useSessionExpiredCheck()
     const [visibleCount, setVisibleCount] = useState(0);
     const [showTyping, setShowTyping] = useState(true);
     const [animatingIdx, setAnimatingIdx] = useState(-1);
+
+    const setQuestions = useFundraiseStore((state) => state.setQuestions);
 
     useEffect(() => {
         if (visibleCount < messages.length) {
@@ -29,6 +45,21 @@ const NewFundraisePage: React.FC = () => {
             return () => clearTimeout(typingTimer);
         }
     }, [visibleCount]);
+
+    useEffect(() => {
+        let token: string | undefined = undefined;
+        if (typeof document !== "undefined") {
+            const match = document.cookie.match(/(^| )token=([^;]+)/);
+            token = match ? match[2] : undefined;
+        }
+        fetcher('/fundraiser/create')
+            .then(data => {
+                if (data.Questions) {
+                    setQuestions(data.Questions);
+                    localStorage.setItem("fundraiseQuestions", JSON.stringify(data.Questions));
+                }
+            });
+    }, [setQuestions]);
 
     const router = useRouter();
     return (

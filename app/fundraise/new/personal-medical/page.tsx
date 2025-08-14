@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { IoIosArrowForward } from "react-icons/io";
+import { useFundraiseStore } from "@/stores/fundraiseStore";
 
 const messages = [
   "How old is the beneficiary?",
@@ -21,6 +22,15 @@ const PersonalMedicalPage: React.FC = () => {
   const [animatingIdx, setAnimatingIdx] = useState(-1);
 
   const router = useRouter();
+
+  const answers = useFundraiseStore((state) => state.answers);
+  const setAnswer = useFundraiseStore((state) => state.setAnswer);
+
+  const handleSelect = (value: string) => {
+    setAnswer(2, value);
+    router.push('/fundraise/new/beneficiary');
+  };
+
   useEffect(() => {
     if (visibleCount < messages.length) {
       setShowTyping(true);
@@ -40,41 +50,36 @@ const PersonalMedicalPage: React.FC = () => {
   return (
     <div className="create-container h-[100vh] flex flex-col max-w-2xl mx-auto mt-[30px] mb-[60px] my-[20%] p-[40px]">
       <p className="text-[#999] text-[16px] font-medium">Rosie @ Give.Asia</p>
-      {messages.slice(0, visibleCount).map((msg, idx) => {
-        if (idx === 0 && typeof msg === 'string') {
-          // First message: white background
-          return (
+      {messages.slice(0, 1).map((msg, idx) => (
+        <div
+          key={idx}
+          className={[
+            "w-full self-start",
+            "transition-all duration-500",
+            "text-[18px] leading-[24px] font-semibold text-[#333] bg-white",
+            "shadow-[0_20px_30px_0_rgba(0,0,0,0.05)]",
+            "border border-[#eee]",
+            "rounded-[12px]",
+            "py-[15px] px-[25px]",
+            "mb-[10px]",
+          ].join(" ")}
+        >
+          {msg as string}
+        </div>
+      ))}
+      {visibleCount > 0 && (
+        <div className="flex flex-col gap-1 mt-2">
+          {messages.slice(1).map((item: any, idx) => (
             <div
-              key={idx}
-              className={[
-                "w-full self-start",
-                "transition-all duration-500",
-                animatingIdx === idx
-                  ? "opacity-0 translate-y-4 scale-95"
-                  : "opacity-100 translate-y-0 scale-100",
-                "text-[18px] leading-[24px] font-semibold text-[#333] bg-white",
-                "shadow-[0_20px_30px_0_rgba(0,0,0,0.05)]",
-                "border border-[#eee]",
-                "rounded-[12px]",
-                "py-[15px] px-[25px]",
-                "mb-[10px]",
-              ].join(" ")}
-            >
-              {msg}
-            </div>
-          );
-        } else if (typeof msg === 'object' && msg !== null && 'title' in msg && 'desc' in msg) {
-          const m = msg as { title: string; desc: string };
-          return (
-            <div
-              key={idx}
+              key={item.title}
+              onClick={() => handleSelect(item.title)}
               className={[
                 "w-full self-start flex items-center justify-between gap-4 cursor-pointer",
                 "transition-all duration-300",
-                animatingIdx === idx
-                  ? "opacity-0 translate-y-4 scale-95"
-                  : "opacity-100 translate-y-0 scale-100",
-                "text-[18px] leading-[24px] font-semibold text-white bg-[#EB008C]",
+
+                answers[2] === item.title
+                  ? "text-white bg-pink-600 border-pink-600"
+                  : "text-[18px] font-semibold text-white bg-[#EB008C]",
                 "border border-[#eee]",
                 "shadow-[0_20px_30px_0_rgba(0,0,0,0.05)]",
                 "rounded-[12px]",
@@ -82,19 +87,16 @@ const PersonalMedicalPage: React.FC = () => {
                 "mb-[10px]",
                 "hover:bg-[#c90074] hover:scale-[1.03] active:scale-95",
               ].join(" ")}
-              onClick={() => router.push('/fundraise/new/beneficiary')}
             >
               <div>
-                <div>{m.title}</div>
-                <div className="text-[15px] leading-[20px] font-normal text-white/90">{m.desc}</div>
+                <div>{item.title}</div>
+                <div className="text-[15px] leading-[20px] font-normal text-white/90">{item.desc}</div>
               </div>
               <IoIosArrowForward className="text-[26px] text-white ml-3 flex-shrink-0" />
             </div>
-          );
-        } else {
-          return null;
-        }
-      })}
+          ))}
+        </div>
+      )}
       {visibleCount < messages.length && showTyping && (
         <div
           className={

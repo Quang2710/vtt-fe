@@ -1,6 +1,7 @@
 "use client";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
+import { useFundraiseStore } from "@/stores/fundraiseStore";
 
 const DIAGNOSIS_OPTIONS = [
   { value: "this_week", label: "This week" },
@@ -32,8 +33,17 @@ const DiagnosisSelect: React.FC<{
 const DiagnosisPage: React.FC = () => {
   const [visible, setVisible] = useState(false);
   const [showTyping, setShowTyping] = useState(true);
-  const [illness, setIllness] = useState("");
+  const answers = useFundraiseStore((state) => state.answers);
+  const [illness, setIllness] = useState(
+    typeof answers[11] === "object" && answers[11] !== null && "answer" in answers[11]
+      ? answers[11].answer
+      : (answers[11] as string) || ""
+  );
   const router = useRouter();
+
+  const questions = useFundraiseStore((state) => state.questions);
+  const setAnswer = useFundraiseStore((state) => state.setAnswer);
+  const question11 = questions.find(q => q.id === 11);
 
   useEffect(() => {
     setShowTyping(true);
@@ -57,13 +67,16 @@ const DiagnosisPage: React.FC = () => {
       {visible && (
         <>
           <div className="w-full self-start transition-all duration-500 text-[18px] leading-[24px] font-semibold text-[#333] bg-white border border-[#eee] rounded-[12px] shadow-[0_20px_30px_0_rgba(0,0,0,0.05)] py-[15px] px-[25px] mb-[10px]">
-            When did the beneficiary get the diagnosis?
+            {question11?.name || "When did the beneficiary get the diagnosis?"}
           </div>
           <DiagnosisSelect value={illness} onChange={setIllness} />
           <button
             className="cursor-pointer w-full bg-[#EB008C] text-white text-[18px] font-semibold py-3 rounded-lg shadow hover:bg-[#c90074] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed mt-3"
             disabled={!illness.trim()}
-            onClick={() => router.push("/fundraise/new/accident-occur")}
+            onClick={() => {
+              setAnswer(11, { answer: illness, fileUrl: "" });
+              router.push("/fundraise/new/accident-occur");
+            }}
           >
             Next
           </button>

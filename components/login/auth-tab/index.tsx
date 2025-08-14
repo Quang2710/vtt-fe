@@ -43,8 +43,7 @@ export default function AuthTabs() {
       if (token) {
         document.cookie = `token=${token}; path=/; max-age=604800`;
         if (res.userInfo) {
-          useUserStore.getState().setUser(res.userInfo); 
-           console.log("userInfo in zustand:", useUserStore.getState().user);
+          useUserStore.getState().setUser(res.userInfo);
         }
         window.location.href = "/";
       }
@@ -60,13 +59,13 @@ export default function AuthTabs() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(values),
+        skipAuth: true,
       });
       const token = res.token || (res.data && res.data.token);
       if (token) {
         document.cookie = `token=${token}; path=/; max-age=604800`;
         if (res.userInfo) {
           useUserStore.getState().setUser(res.userInfo);
-           console.log("userInfo in zustand:", useUserStore.getState().user); 
         }
         window.location.href = "/";
       }
@@ -285,21 +284,19 @@ export default function AuthTabs() {
       <div className="flex border-b border-gray-200">
         <button
           onClick={() => setActiveTab("register")}
-          className={`cursor-pointer w-1/2 py-3 text-center font-semibold ${
-            activeTab === "register"
+          className={`cursor-pointer w-1/2 py-3 text-center font-semibold ${activeTab === "register"
               ? "text-pink-600 border-b-2 border-pink-600"
               : "text-gray-500"
-          }`}
+            }`}
         >
           REGISTER
         </button>
         <button
           onClick={() => setActiveTab("login")}
-          className={`cursor-pointer w-1/2 py-3 text-center font-semibold ${
-            activeTab === "login"
+          className={`cursor-pointer w-1/2 py-3 text-center font-semibold ${activeTab === "login"
               ? "text-pink-600 border-b-2 border-pink-600"
               : "text-gray-500"
-          }`}
+            }`}
         >
           LOGIN
         </button>

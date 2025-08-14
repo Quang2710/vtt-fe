@@ -2,23 +2,31 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { IoIosArrowForward } from "react-icons/io";
-
-const messages = [
-    "What are you raising money for?",
-    { title: "Current medical bills", value: "current-medical-bills", redirect: "/fundraise/new/trying-raise" },
-    { title: "Future medical bills", value: "future-medical-bills", redirect: "/fundraise/new/trying-raise" },
-    { title: "Medications", value: "medications", redirect: "/fundraise/new/trying-raise" },
-    { title: "Transportation expenses", value: "transportation-expenses", redirect: "/fundraise/new/trying-raise" },
-    { title: "Caregiving expenses", value: "caregiving-expenses", redirect: "/fundraise/new/trying-raise" },
-    { title: "Other", value: "other", redirect: "/fundraise/new/trying-raise" },
-];
+import { useFundraiseStore } from "@/stores/fundraiseStore";
+import { useFundraiseStepGuard } from "@/hooks/useFundraiseStepGuard";
 
 const RaiseMoneyPage: React.FC = () => {
+    const isGuardChecked = useFundraiseStepGuard(13, "/fundraise/new");
+
     const [visibleCount, setVisibleCount] = useState(0);
     const [showTyping, setShowTyping] = useState(true);
     const [animatingIdx, setAnimatingIdx] = useState(-1);
 
     const router = useRouter();
+    const setAnswer = useFundraiseStore((state) => state.setAnswer);
+    const questions = useFundraiseStore((state) => state.questions);
+    const question14 = questions.find(q => q.id === 14);
+
+    const messages = [
+        question14?.name || "What are you raising money for?",
+        { title: "Current medical bills", value: "current-medical-bills", redirect: "/fundraise/new/trying-raise" },
+        { title: "Future medical bills", value: "future-medical-bills", redirect: "/fundraise/new/trying-raise" },
+        { title: "Medications", value: "medications", redirect: "/fundraise/new/trying-raise" },
+        { title: "Transportation expenses", value: "transportation-expenses", redirect: "/fundraise/new/trying-raise" },
+        { title: "Caregiving expenses", value: "caregiving-expenses", redirect: "/fundraise/new/trying-raise" },
+        { title: "Other", value: "other", redirect: "/fundraise/new/trying-raise" },
+    ];
+
     useEffect(() => {
         if (visibleCount < messages.length) {
             setShowTyping(true);
@@ -35,12 +43,13 @@ const RaiseMoneyPage: React.FC = () => {
         }
     }, [visibleCount]);
 
+    if (!isGuardChecked) return null;
+
     return (
         <div className="create-container h-[100vh] flex flex-col max-w-2xl mx-auto mt-[30px] mb-[60px] my-[20%] p-[40px]">
             <p className="text-[#999] text-[16px] font-medium">Rosie @ Give.Asia</p>
             {messages.slice(0, visibleCount).map((msg, idx) => {
                 if (idx === 0 && typeof msg === 'string') {
-                    // First message: white background
                     return (
                         <div
                             key={idx}
@@ -80,11 +89,9 @@ const RaiseMoneyPage: React.FC = () => {
                                 "hover:bg-[#c90074] hover:scale-[1.03] active:scale-95",
                             ].join(" ")}
                             onClick={() => {
+                                setAnswer(14, { answer: m.value, fileUrl: "" });
                                 if (m.redirect) {
                                     router.push(m.redirect);
-                                } else {
-                                    console.log('Selected relation value:', m.value);
-                                    // router.push('/fundraise/new/beneficiary');
                                 }
                             }}
                         >

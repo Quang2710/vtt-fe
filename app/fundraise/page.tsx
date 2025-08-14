@@ -6,16 +6,18 @@ import { LuBookHeart } from "react-icons/lu";
 import { PiHandHeartDuotone } from "react-icons/pi";
 import Image from "next/image";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { fetcher } from "@/libs/fetcher";
 
 
 export default function FundraisePage() {
     const [exampleFun, setExampleFun] = useState<{ image: string, title: string, description: string } | null>(null);
+    const router = useRouter();
+
     useEffect(() => {
         async function fetchData() {
             try {
-                const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/setting/example-fundraises`);
-                if (!res.ok) throw new Error('Failed to fetch fundraisers');
-                const json = await res.json();
+                const json = await fetcher(`/setting/example-fundraises`);
                 setExampleFun(json)
             } catch (err: any) {
             } finally {
@@ -24,7 +26,19 @@ export default function FundraisePage() {
         }
         fetchData();
     }, []);
-    console.log('_exampleFun', exampleFun)
+    const handleStartFundraiser = () => {
+        let token: string | undefined = undefined;
+        if (typeof document !== "undefined") {
+            const match = document.cookie.match(/(^| )token=([^;]+)/);
+            token = match ? match[2] : undefined;
+        }
+        if (!token) {
+            router.push("/login");
+        } else {
+            router.push("/fundraise/new");
+        }
+    };
+
     return (
         <div className="fundraise-landing w-full h-full overflow-hidden">
             <div className="fundraise-landing__section fundraise-landing__section--intro py-[40px] text-[#fff] bg-[#f4f4f4] flex flex-col items-center justify-center">
@@ -43,14 +57,13 @@ export default function FundraisePage() {
                             <h1 className="text-white text-4xl font-bold drop-shadow-lg text-center px-[190px] text-[72px] mb-[24px] font-fold text-[#fff]">
                                 Fundraise for your cause today
                             </h1>
-                            <Link href="/fundraise/new" passHref>
-                                <button
-                                    className="cursor-pointer text-[14px] rounded-[8px] bg-[#0082ff] text-[#fff] py-[10px] px-[40px] font-medium hover:bg-[#e0e0e0] transition duration-200 shadow-[0px_3px_5px_rgba(0,0,0,0.1)]"
-                                    type="button"
-                                >
-                                    START A FUNDRAISER
-                                </button>
-                            </Link>
+                            <button
+                                className="cursor-pointer text-[14px] rounded-[8px] bg-[#0082ff] text-[#fff] py-[10px] px-[40px] font-medium hover:bg-[#e0e0e0] transition duration-200 shadow-[0px_3px_5px_rgba(0,0,0,0.1)]"
+                                type="button"
+                                onClick={handleStartFundraiser}
+                            >
+                                START A FUNDRAISER
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -122,11 +135,13 @@ export default function FundraisePage() {
                         </div>
 
                         <div className="fundraise-landing__cta-section my-[60px] pb-[60px] border-b border-[#eee] text-center flex flex-col justify-center items-center">
-                            <Link href="/fundraise/new" passHref>
-                                <button className="loading-button fundraise-landing__cta-section__button cursor-pointer bg-[#0082ff] w-auto px-[60px] py-[14px] shadow-[0px_3px_5px_rgba(0,0,0,0.1)] rounded-[10px] font-bold text-white text-[20px] hover:-translate-y-1 transition-all duration-300 ease-in-out">
-                                    START A FUNDRAISER
-                                </button>
-                            </Link>
+                            <button
+                                className="loading-button fundraise-landing__cta-section__button cursor-pointer bg-[#0082ff] w-auto px-[60px] py-[14px] shadow-[0px_3px_5px_rgba(0,0,0,0.1)] rounded-[10px] font-bold text-white text-[20px] hover:-translate-y-1 transition-all duration-300 ease-in-out"
+                                type="button"
+                                onClick={handleStartFundraiser}
+                            >
+                                START A FUNDRAISER
+                            </button>
                             <p className="text-[20px] text-black font-semibold mt-[16px] mb-[10px] my-auto px-[20px] max-w-2xl">
                                 More than 27,000 fundraisers have successfully raised over S$139 million million through Give.Asia.
                             </p>
@@ -213,11 +228,13 @@ export default function FundraisePage() {
 ">More than 27,000 fundraisers have successfully raised over S$139 million million through Give.Asia.
 
                             </p>
-                            <Link href="/fundraise/new" passHref>
-                                <button className="m-auto mt-[20px] loading-button fundraise-landing__cta-section__button cursor-pointer bg-[#0082ff] w-auto px-[60px] py-[14px] shadow-[0px_3px_5px_rgba(0,0,0,0.1)] rounded-[10px] font-bold text-white text-[20px] hover:-translate-y-1 transition-all duration-300 ease-in-out">
-                                    START A FUNDRAISER
-                                </button>
-                            </Link>
+                            <button
+                                className="m-auto mt-[20px] loading-button fundraise-landing__cta-section__button cursor-pointer bg-[#0082ff] w-auto px-[60px] py-[14px] shadow-[0px_3px_5px_rgba(0,0,0,0.1)] rounded-[10px] font-bold text-white text-[20px] hover:-translate-y-1 transition-all duration-300 ease-in-out"
+                                type="button"
+                                onClick={handleStartFundraiser}
+                            >
+                                START A FUNDRAISER
+                            </button>
                         </div>
                     </div>
                 </div>

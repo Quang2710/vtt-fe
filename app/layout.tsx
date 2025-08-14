@@ -3,10 +3,10 @@ import "./globals.css";
 import DynamicHeader from "@/components/layout/dynamic-header";
 import DynamicFooter from "@/components/layout/dynamic-footer";
 import HelpButton from "@/components/help";
-import { Providers } from "@/libs/providers";
+
 const lexendDeca = Lexend_Deca({
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700"], // choose the weights you need
+  weight: ["400", "500", "600", "700"],
   display: "swap",
 });
 

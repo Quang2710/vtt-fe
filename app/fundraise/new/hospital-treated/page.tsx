@@ -1,11 +1,17 @@
 "use client";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
+import { useFundraiseStore } from "@/stores/fundraiseStore";
 
 const HopitalTreatedPage: React.FC = () => {
   const [visible, setVisible] = useState(false);
   const [showTyping, setShowTyping] = useState(true);
   const [hopital, setIllness] = useState("");
+  const router = useRouter();
+
+  const questions = useFundraiseStore((state) => state.questions);
+  const setAnswer = useFundraiseStore((state) => state.setAnswer);
+  const question15 = questions.find(q => q.id === 15);
 
   useEffect(() => {
     setShowTyping(true);
@@ -15,7 +21,6 @@ const HopitalTreatedPage: React.FC = () => {
     }, 400);
     return () => clearTimeout(timer);
   }, []);
-  const router = useRouter();
 
   return (
     <div className="create-container h-[100vh] flex flex-col max-w-2xl mx-auto mt-[30px] mb-[60px] my-[20%] p-[40px]">
@@ -30,7 +35,7 @@ const HopitalTreatedPage: React.FC = () => {
       {visible && (
         <>
           <div className="w-full self-start transition-all duration-500 text-[18px] leading-[24px] font-semibold text-[#333] bg-white border border-[#eee] rounded-[12px] shadow-[0_20px_30px_0_rgba(0,0,0,0.05)] py-[15px] px-[25px] mb-[10px]">
-            Which hospital is the beneficiary being treated at?
+            {question15?.name || "Which hospital are you being treated at"}
           </div>
           <input
             type="text"
@@ -42,7 +47,10 @@ const HopitalTreatedPage: React.FC = () => {
           <button
             className="cursor-pointer w-full bg-[#EB008C] text-white text-[18px] font-semibold py-3 rounded-lg shadow hover:bg-[#c90074] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed mt-3"
             disabled={!hopital.trim()}
-            onClick={() => router.push("/fundraise/new/raising-money")}
+            onClick={() => {
+              setAnswer(15, { answer: hopital, fileUrl: "" });
+              router.push("/fundraise/new/raising-money");
+            }}
           >
             Next
           </button>

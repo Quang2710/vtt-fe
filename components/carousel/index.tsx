@@ -3,10 +3,11 @@
 import Slider from "react-slick";
 import { ChevronLeft, ChevronRight, MapPin } from "lucide-react";
 import Image from "next/image";
-
-
+import { useRouter } from "next/navigation";
+import slugify from "@/libs/slugify";
 import { fetcher } from "@/libs/fetcher";
 import { useEffect, useState } from "react";
+
 export default function CampaignCarousel() {
     type Banner = {
         id: number;
@@ -29,6 +30,7 @@ export default function CampaignCarousel() {
 
     const [banner, setBanner] = useState<Banner[]>([]);
     const [bannerPost, setBannerPost] = useState<BannerPost[]>([]);
+    const router = useRouter();
 
     useEffect(() => {
         fetcher("/setting/banner")
@@ -88,6 +90,7 @@ export default function CampaignCarousel() {
         ],
     };
 
+
     return (
         <div className="relative lg:px-4 hero py-10">
             {banner.length > 0 && (
@@ -105,37 +108,41 @@ export default function CampaignCarousel() {
                 </div>
             )}
             <Slider {...settings}>
-                {bannerPost.map((item: any, index: number) => (
-                    <div
-                        key={index}
-                        className="!flex flex-col lg:flex-row bg-white lg:rounded-xl overflow-hidden shadow-md h-[70vh]"
-                    >
-                        <div className="w-full lg:w-1/2 bg-gradient-to-br from-[#021A4C] to-[#0A276B] text-white p-6 relative flex flex-col justify-center">
-                            <h3 className="text-2xl font-bold mb-4">{item.title}</h3>
-                            <p className="mb-4">{item.tag_name}</p>
-                        <div className="flex gap-3 mt-4">
-                            <button className="bg-white text-blue-900 font-semibold px-4 py-2 rounded-md cursor-pointer">
-                                DONATE
-                            </button>
-                            {item.article_link ? (
-                                <a href={item.article_link} target="_blank" rel="noopener noreferrer" className="text-white font-medium">READ ARTICLE</a>
-                            ) : (
-                                <button className="text-white font-medium opacity-50 cursor-not-allowed" disabled>READ ARTICLE</button>
-                            )}
-                        </div>
-                        </div>
+                {bannerPost.map((item: any, index: number) => {
+                    const slug = slugify(item.title || "");
+                    return (
+                        <div
+                            key={index}
+                            className="!flex flex-col lg:flex-row bg-white lg:rounded-xl overflow-hidden shadow-md h-[70vh] cursor-pointer"
+                            onClick={() => router.push(`/detail-blog/${slug}?id=${item.id}`)}
+                        >
+                            <div className="w-full lg:w-1/2 bg-gradient-to-br from-[#021A4C] to-[#0A276B] text-white p-6 relative flex flex-col justify-center">
+                                <h3 className="text-2xl font-bold mb-4">{item.title}</h3>
+                                <p className="mb-4">{item.tag_name}</p>
+                                <div className="flex gap-3 mt-4">
+                                    <button className="bg-white text-blue-900 font-semibold px-4 py-2 rounded-md cursor-pointer">
+                                        DONATE
+                                    </button>
+                                    {item.article_link ? (
+                                        <a href={item.article_link} target="_blank" rel="noopener noreferrer" className="text-white font-medium">READ ARTICLE</a>
+                                    ) : (
+                                        <button className="text-white font-medium opacity-50 cursor-not-allowed" disabled>READ ARTICLE</button>
+                                    )}
+                                </div>
+                            </div>
 
-                        <div className="w-full lg:w-1/2">
-                            <Image
-                                src={item.image}
-                                alt={item.title}
-                                width={500}
-                                height={300}
-                                className="object-cover h-full w-full"
-                            />
+                            <div className="w-full lg:w-1/2">
+                                <Image
+                                    src={item.image}
+                                    alt={item.title}
+                                    width={500}
+                                    height={300}
+                                    className="object-cover h-full w-full"
+                                />
+                            </div>
                         </div>
-                    </div>
-                ))}
+                    );
+                })}
             </Slider>
         </div>
     );
