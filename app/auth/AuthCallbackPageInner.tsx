@@ -11,17 +11,18 @@ export default function AuthCallbackPageInner() {
 
   useEffect(() => {
     async function fetchUserAndRedirect() {
-      const token = searchParams.get("token");
+        const token = searchParams.get("token");
+        console.log(token);
       if (token) {
         Cookies.set("token", token, { path: "/", expires: 7 });
       }
-      try {
-        const user = await fetcher("/auth/get-user");
-        useUserStore.getState().setUser(user);
-        router.replace("/");
-      } catch {
-        router.replace("/login");
-      }
+    //   try {
+    //     const user = await fetcher("/auth/get-user");
+    //     useUserStore.getState().setUser(user);
+    //     router.replace("/");
+    //   } catch {
+    //     router.replace("/login");
+    //   }
     }
     fetchUserAndRedirect();
   }, [router, searchParams]);
