@@ -6,9 +6,17 @@ import Impact from "./impact";
 import Settings from "./settings";
 import Donated from "./donated";
 import Fundraised from "./fundraised";
+import { useUserStore } from "@/stores/userStore";
 
 const ProfilePage = () => {
-    const [activeTab, setActiveTab] = useState<number>(1)
+    const [activeTab, setActiveTab] = useState<number>(1);
+    const user = useUserStore((s) => s.user);
+
+    const avatarSrc =
+        user?.my_profile_url && user.my_profile_url !== ""
+            ? user.my_profile_url
+            : "avatar.jpg";
+
     const renderTabContent = () => {
         if (activeTab === 1) {
             return <Impact />
@@ -26,13 +34,21 @@ const ProfilePage = () => {
     return (
         <div className="px-5 md:px-[5%] bg-bg-gray">
             <div className="flex gap-9 items-center py-8">
-                <Image src="/avatar.jpg" width={165} height={165} alt="" className="object-cover rounded-full" />
+                <Image
+                    src={avatarSrc}
+                    width={165}
+                    height={165}
+                    alt=""
+                    className="object-cover rounded-full bg-[#f0f2f5]"
+                />
                 <div>
                     <div className="font-bold text-3xl mb-2.5">
-                        Dũng Hoàng
+                        {user?.full_name || "Giver"}
                     </div>
                     <div className="text-xl">
-                        Dũng has been a Giver since Jul 21, 2025.
+                        {user?.full_name
+                            ? `${user.full_name} has been a Giver since Jul 21, 2025.`
+                            : "You have been a Giver since Jul 21, 2025."}
                     </div>
                 </div>
             </div>

@@ -13,19 +13,29 @@ import { useUserStore } from "@/stores/userStore";
 export default function AuthTabs() {
   const pathname = usePathname();
   const router = useRouter();
-  const [activeTab, setActiveTab] = useState<"login" | "register" | string>(
-    pathname.replace("/", "") ?? "login"
-  );
+  const [activeTab, setActiveTab] = useState<"login" | "register">("login");
   const [isRegisterWithEmail, setIsRegisterWithEmail] =
     useState<boolean>(false);
   const [isLoginWithEmail, setIsLoginWithEmail] = useState<boolean>(false);
   const [apiError, setApiError] = useState("");
+  const [toastMessage, setToastMessage] = useState<string>("");
+  const [toastType, setToastType] = useState<"success" | "error" | "">("");
 
   useEffect(() => {
     setApiError("");
     setIsRegisterWithEmail(false);
     setIsLoginWithEmail(false);
   }, [activeTab]);
+
+  useEffect(() => {
+    if (toastMessage) {
+      const timer = setTimeout(() => {
+        setToastMessage("");
+        setToastType("");
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [toastMessage]);
 
   const handleSocialLogin = (provider: "facebook" | "google") => {
     window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/auth/login/${provider}`;
@@ -39,16 +49,19 @@ export default function AuthTabs() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(values),
       });
-      const token = res.token || (res.data && res.data.token);
-      if (token) {
-        document.cookie = `token=${token}; path=/; max-age=604800`;
-        if (res.userInfo) {
-          useUserStore.getState().setUser(res.userInfo);
-        }
-        window.location.href = "/";
+      if (res.statusCode === 200 || res.message) {
+        setActiveTab("login");
+        setIsRegisterWithEmail(false);
+        setToastMessage(res.message || "Register successful! Please log in.");
+        setToastType("success");
+      } else {
+        setToastMessage(res.message || "Register failed. Please try again.");
+        setToastType("error");
       }
     } catch (err: any) {
       setApiError(err.message || "Unexpected error");
+      setToastMessage(err?.message || "Register failed. Please try again.");
+      setToastType("error");
     }
   };
 
@@ -67,10 +80,17 @@ export default function AuthTabs() {
         if (res.userInfo) {
           useUserStore.getState().setUser(res.userInfo);
         }
+        setToastMessage("Login successful!");
+        setToastType("success");
         window.location.href = "/";
+      } else {
+        setToastMessage("Login failed. Please try again.");
+        setToastType("error");
       }
     } catch (err: any) {
       setApiError(err.message || "Unexpected error");
+      setToastMessage("Login failed. Please try again.");
+      setToastType("error");
     }
   };
 
@@ -157,7 +177,7 @@ export default function AuthTabs() {
 
               <button
                 type={"submit"}
-                className="w-full bg-pink-600 hover:bg-pink-700 text-white font-bold py-2 rounded-md shadow"
+                className="w-full cursor-pointer bg-pink-600 hover:bg-pink-700 text-white font-bold py-2 rounded-md shadow"
               >
                 LOGIN WITH EMAIL
               </button>
@@ -166,7 +186,7 @@ export default function AuthTabs() {
         ) : (
           <button
             type={"button"}
-            className="w-full bg-pink-600 hover:bg-pink-700 text-white font-bold py-2 rounded-md shadow"
+            className="w-full cursor-pointer bg-pink-600 hover:bg-pink-700 text-white font-bold py-2 rounded-md shadow"
             onClick={loginEmail}
           >
             LOGIN WITH EMAIL
@@ -259,7 +279,7 @@ export default function AuthTabs() {
 
               <button
                 type={"submit"}
-                className="w-full bg-pink-600 hover:bg-pink-700 text-white font-bold py-2 rounded-md shadow"
+                className="w-full cursor-pointer bg-pink-600 hover:bg-pink-700 text-white font-bold py-2 rounded-md shadow"
               >
                 REGISTER WITH EMAIL
               </button>
@@ -268,7 +288,7 @@ export default function AuthTabs() {
         ) : (
           <button
             type={"button"}
-            className="w-full bg-pink-600 hover:bg-pink-700 text-white font-bold py-2 rounded-md shadow"
+            className="w-full cursor-pointer bg-pink-600 hover:bg-pink-700 text-white font-bold py-2 rounded-md shadow"
             onClick={registerEmail}
           >
             REGISTER WITH EMAIL
@@ -280,6 +300,17 @@ export default function AuthTabs() {
 
   return (
     <div className="max-w-md mx-auto mt-10 bg-white rounded-lg shadow-lg overflow-hidden">
+      {/* Toast message */}
+      {toastMessage && (
+        <div
+          className={`fixed right-6 bottom-6 z-[9999] px-6 py-3 rounded shadow-lg font-semibold animate-fade-in
+            ${toastType === "success" ? "bg-green-600 text-white" : ""}
+            ${toastType === "error" ? "bg-red-600 text-white" : ""}
+          `}
+        >
+          {toastMessage}
+        </div>
+      )}
       {/* Tabs */}
       <div className="flex border-b border-gray-200">
         <button

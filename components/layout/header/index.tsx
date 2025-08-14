@@ -123,7 +123,7 @@ const Header = () => {
                                         className="block w-full text-left px-4 py-2 text-[#d32f2f] hover:bg-[#f7f7fa] cursor-pointer"
                                         onClick={() => {
                                             Cookies.remove("token", { path: "/" });
-                                            window.location.reload();
+                                            window.location.href = "/login";
                                         }}
                                     >
                                         Logout
