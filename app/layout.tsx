@@ -3,6 +3,7 @@ import "./globals.css";
 import DynamicHeader from "@/components/layout/dynamic-header";
 import DynamicFooter from "@/components/layout/dynamic-footer";
 import HelpButton from "@/components/help";
+import { Providers } from "@/libs/providers";
 
 const lexendDeca = Lexend_Deca({
   subsets: ["latin"],
