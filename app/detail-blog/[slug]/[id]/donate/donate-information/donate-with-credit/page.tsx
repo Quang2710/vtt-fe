@@ -15,28 +15,29 @@ const DonateWithCreditPage = () => {
     const params = useParams();
     const router = useRouter();
 
-    const amount = Number(searchParams.get("amount") || 0);
-    const slug = Array.isArray(params?.slug) ? params.slug[0] : params?.slug || "";
-    const tip = Number(searchParams.get("tip") || 0);
-    const name = searchParams.get("name");
-    const email = searchParams.get("email");
-
     const [clientSecret, setClientSecret] = useState<string | null>(null);
     const [error, setError] = useState<string | null>(null);
- 
+
+    const [initAmount] = useState(Number(searchParams.get("amount") || 0));
+    const [initTip] = useState(Number(searchParams.get("tip") || 0));
+    const [initName] = useState(searchParams.get("name"));
+    const [initEmail] = useState(searchParams.get("email"));
+    const [initId] = useState(Number(params.id));
+    const [initSlug] = useState(Array.isArray(params?.slug) ? params.slug[0] : params?.slug || "");
+
     useEffect(() => {
-        if (amount > 0) {
+        if (initAmount > 0) {
             fetcher("/donations/create-payment-intent", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
-                    amount: convertToSubcurrency(amount),
-                    tip: tip,
-                    name: name,
-                    email: email,
-                    fundraiser_id: Number(params.id),
+                    amount: convertToSubcurrency(initAmount),
+                    tip: initTip,
+                    name: initName,
+                    email: initEmail,
+                    fundraiser_id: initId,
                 }),
             })
                 .then((res) => {
@@ -49,7 +50,7 @@ const DonateWithCreditPage = () => {
                 })
                 .catch(() => setError("Unable to connect to server. Please try again later."));
         }
-    }, [amount, name, email, tip, params.id]);
+    }, [initAmount, initName, initEmail, initTip, initId]);
 
     if (error) {
         return (
@@ -82,7 +83,7 @@ const DonateWithCreditPage = () => {
     return (
         <div className="w-full max-w-2xl mx-auto px-4 py-10">
             <Elements stripe={stripePromise} options={{ clientSecret }}>
-                <DonateWithCredit amount={amount} clientSecret={clientSecret} slug={slug} id={Number(params.id)} />
+                <DonateWithCredit amount={initAmount} clientSecret={clientSecret} slug={initSlug} id={initId} />
             </Elements>
         </div>
     );
