@@ -65,11 +65,11 @@ const EditTipsPage = () => {
             </div>
           )}
         </div>
-        {customTip && Number(customTip) > 0 && (
+        {customTip !== "" && !isNaN(Number(customTip)) && (
           <button
             className="cursor-pointer mt-4 w-full bg-pink-600 text-[14px] text-white font-semibold py-2 rounded-[10px] shadow transition-all duration-200 hover:bg-pink-600 hover:scale-105 hover:shadow-lg"
             onClick={() => {
-              if (slug && customTip && Number(customTip) > 0) {
+              if (slug && customTip !== "" && !isNaN(Number(customTip))) {
                 router.push(
                   `/detail-blog/${slug}/${params.id}/donate/donate-information?amount=${customAmount}&tip=${customTip}`
                 );

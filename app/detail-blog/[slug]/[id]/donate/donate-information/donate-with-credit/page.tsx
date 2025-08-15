@@ -18,12 +18,21 @@ const DonateWithCreditPage = () => {
     const [clientSecret, setClientSecret] = useState<string | null>(null);
     const [error, setError] = useState<string | null>(null);
 
-    const [initAmount] = useState(Number(searchParams.get("amount") || 0));
-    const [initTip] = useState(Number(searchParams.get("tip") || 0));
-    const [initName] = useState(searchParams.get("name"));
-    const [initEmail] = useState(searchParams.get("email"));
-    const [initId] = useState(Number(params.id));
-    const [initSlug] = useState(Array.isArray(params?.slug) ? params.slug[0] : params?.slug || "");
+    const [initAmount, setInitAmount] = useState<number>(0);
+    const [initTip, setInitTip] = useState<number>(0);
+    const [initName, setInitName] = useState<string | null>(null);
+    const [initEmail, setInitEmail] = useState<string | null>(null);
+    const [initId, setInitId] = useState<number>(0);
+    const [initSlug, setInitSlug] = useState<string>("");
+
+    useEffect(() => {
+        setInitAmount(Number(searchParams.get("amount") || 0));
+        setInitTip(Number(searchParams.get("tip") || 0));
+        setInitName(searchParams.get("name"));
+        setInitEmail(searchParams.get("email"));
+        setInitId(Number(params.id));
+        setInitSlug(Array.isArray(params?.slug) ? params.slug[0] : params?.slug || "");
+    }, []); 
 
     useEffect(() => {
         if (initAmount > 0) {
@@ -50,7 +59,7 @@ const DonateWithCreditPage = () => {
                 })
                 .catch(() => setError("Unable to connect to server. Please try again later."));
         }
-    }, [initAmount, initName, initEmail, initTip, initId]);
+    }, [initAmount, initTip, initName, initEmail, initId]);
 
     if (error) {
         return (

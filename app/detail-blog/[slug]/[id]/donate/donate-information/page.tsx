@@ -26,6 +26,7 @@ const DonateInformationPage = () => {
   }, []);
 
   const formatNumber = (value: string) => {
+    if (value === "0") return "0";
     const num = Number(value.replace(/,/g, ""));
     return num ? num.toLocaleString() : "";
   };
@@ -114,7 +115,7 @@ const DonateInformationPage = () => {
               type="text"
               min="0"
               placeholder="Tip amount"
-              value={formatNumber(tip)}
+              value={tip === "" ? "" : formatNumber(tip)}
               readOnly
               className="w-full focus:outline-none font-semibold bg-white text appearance-none [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
               style={{ MozAppearance: "textfield" }}
