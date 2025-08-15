@@ -30,6 +30,7 @@ export async function fetcher<T = any>(
       document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
       const { useAuthStore } = await import("@/stores/authStore");
       useAuthStore.getState().setSessionExpired(true);
+      window.location.href = "/login"; 
     }
     throw new Error("Unauthorized");
   }

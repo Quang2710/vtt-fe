@@ -38,17 +38,26 @@ const DonateWithCredit = ({ amount, clientSecret, slug,id }: { amount: number, c
 
     return (
         <form onSubmit={handleSubmit} className="bg-white p-4 rounded-md shadow-md">
-            {clientSecret && <PaymentElement />}
-            {error && <div className="text-red-500">{error}</div>}
-            {loading && (
-                <div className="flex items-center justify-center mb-2 mt-2">
-                    <span className="animate-spin rounded-full h-6 w-6 border-t-2 border-b-2 border-black mr-2"></span>
-                    <span className="text-black">Processing...</span>
+            {!clientSecret ? (
+                <div className="flex items-center justify-center h-32">
+                    <span className="animate-spin rounded-full h-8 w-8 border-t-4 border-b-4 border-black mr-3"></span>
+                    <span className="text-black text-lg font-semibold">Loading payment form...</span>
                 </div>
+            ) : (
+                <>
+                    <PaymentElement />
+                    {error && <div className="text-red-500">{error}</div>}
+                    {loading && (
+                        <div className="flex items-center justify-center mb-2 mt-2">
+                            <span className="animate-spin rounded-full h-6 w-6 border-t-2 border-b-2 border-black mr-2"></span>
+                            <span className="text-black">Processing...</span>
+                        </div>
+                    )}
+                    <button disabled={!stripe || loading} className="text-white w-full p-5 bg-black mt-2 cursor-pointer">
+                        Pay
+                    </button>
+                </>
             )}
-            <button disabled={!stripe || loading} className="text-white w-full p-5 bg-black mt-2 cursor-pointer">
-                Pay
-            </button>
         </form>
     );
 };
