@@ -5,6 +5,7 @@ import { IoIosArrowForward } from 'react-icons/io';
 import { create } from "zustand";
 import { fetcher } from '@/libs/fetcher';
 import { useSessionExpiredCheck } from '@/hooks/useSessionExpiredCheck';
+import { useUserStore } from "@/stores/userStore";
 
 type Question = { id: number; name: string };
 type FundraiseState = {
@@ -16,14 +17,18 @@ const useFundraiseStore = create<FundraiseState>((set) => ({
     setQuestions: (questions) => set({ questions }),
 }));
 
-const messages = [
-    'Hello vũ Quang!',
-    "I'm Rosie from Give.Asia. I'll guide you through your campaign creation process.",
-    'What type of fundraising campaign are you creating?',
-];
-
 const NewFundraisePage: React.FC = () => {
-    useSessionExpiredCheck()
+    useSessionExpiredCheck();
+    const user = useUserStore((s) => s.user);
+
+    const userName = user?.full_name || "Giver";
+
+    const messages = [
+        `Hello ${userName}!`,
+        "I'm Rosie from Give.Asia. I'll guide you through your campaign creation process.",
+        'What type of fundraising campaign are you creating?',
+    ];
+
     const [visibleCount, setVisibleCount] = useState(0);
     const [showTyping, setShowTyping] = useState(true);
     const [animatingIdx, setAnimatingIdx] = useState(-1);
