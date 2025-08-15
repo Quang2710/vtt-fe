@@ -12,7 +12,6 @@ const EditTipsPage = () => {
   const customAmount = searchParams.get("amount") || "125";
   const [customTip, setCustomTip] = useState("");
 
-  // Hàm xử lý khi chọn tip
   const handleTipSelect = (tip: any) => {
     router.push(
       `/detail-blog/${slug}/${params.id}/donate/donate-information?amount=${customAmount}&tip=${tip}`
@@ -72,7 +71,7 @@ const EditTipsPage = () => {
             onClick={() => {
               if (slug && customTip && Number(customTip) > 0) {
                 router.push(
-                  `/detail-blog/${slug}/donate/donate-information?amount=${customAmount}&tip=${customTip}`
+                  `/detail-blog/${slug}/${params.id}/donate/donate-information?amount=${customAmount}&tip=${customTip}`
                 );
               }
             }}
