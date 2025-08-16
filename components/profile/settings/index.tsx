@@ -1,9 +1,18 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useUserStore } from "@/stores/userStore";
 import { fetcher } from "@/libs/fetcher";
 
 const Settings = () => {
     const user = useUserStore((state: any) => state.user);
+
+    useEffect(() => {
+        if (!user) {
+            const localUser = localStorage.getItem("userInfo");
+            if (localUser) {
+                useUserStore.getState().setUser(JSON.parse(localUser));
+            }
+        }
+    }, [user]);
 
     const [form, setForm] = useState({
         full_name: user?.full_name || "",
