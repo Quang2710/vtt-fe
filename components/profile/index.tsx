@@ -12,8 +12,6 @@ const ProfilePage = () => {
     const [activeTab, setActiveTab] = useState<number>(1);
     const user = useUserStore((s) => s.user);
 
-    console.log('user',user);
-
     useEffect(() => {
         if (!user) {
             const localUser = localStorage.getItem("userInfo");
