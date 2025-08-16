@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { Menu } from "lucide-react";
 import Cookies from "js-cookie"; 
 import { useUserStore } from "@/stores/userStore";
+import { fetcher } from "@/libs/fetcher";
 
 const Header = () => {
     const [isOpen, setIsOpen] = useState(false);
@@ -17,6 +18,11 @@ const Header = () => {
     useEffect(() => {
         const cookieToken = Cookies.get("token");
         setToken(cookieToken ?? "");
+        if (cookieToken && !user) {
+            fetcher("/auth/get-user").then((userData) => {
+                useUserStore.getState().setUser(userData);
+            });
+        }
     }, []);
 
     return (
