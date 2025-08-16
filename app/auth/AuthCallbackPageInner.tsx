@@ -13,7 +13,9 @@ export default function AuthCallbackPageInner() {
     const token = searchParams.get("token");
     async function fetchUserAndRedirect() {
       if (token) {
-        Cookies.set("token", token, { path: "/", expires: 7 });
+        console.log("Token received:", token);
+        
+        Cookies.set("token", token, { path: "/" });
       }
         try {
           const user = await fetcher("/auth/get-user");
