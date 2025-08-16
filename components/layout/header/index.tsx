@@ -23,7 +23,7 @@ const Header = () => {
                 useUserStore.getState().setUser(userData);
             });
         }
-    }, []);
+    }, [token, user]);
 
     return (
         <div className="flex text-sm bg-[#F4F4F4] py-3 px-5 relative">
