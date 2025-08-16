@@ -15,13 +15,19 @@ export default function AuthCallbackPageInner() {
       if (token) {
         Cookies.set("token", token, { path: "/" });
       }
-        try {
-          const user = await fetcher("/auth/get-user");
+      try {
+        const user = await fetcher("/auth/get-user");
+        if (user && user.userInfo) {
+          useUserStore.getState().setUser(user.userInfo);
+          localStorage.setItem("userInfo", JSON.stringify(user.userInfo));
+        } else {
           useUserStore.getState().setUser(user);
-          router.replace("/");
-        } catch {
-          router.replace("/login");
+          localStorage.setItem("userInfo", JSON.stringify(user));
         }
+        router.replace("/");
+      } catch {
+        router.replace("/login");
+      }
     }
     fetchUserAndRedirect();
   }, [router, searchParams]);
