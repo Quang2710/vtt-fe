@@ -13,8 +13,6 @@ export default function AuthCallbackPageInner() {
     const token = searchParams.get("token");
     async function fetchUserAndRedirect() {
       if (token) {
-        console.log("Token received:", token);
-        
         Cookies.set("token", token, { path: "/" });
       }
         try {
