@@ -1,7 +1,7 @@
 'use client'
 
 import Image from "next/image";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Impact from "./impact";
 import Settings from "./settings";
 import Donated from "./donated";
@@ -11,6 +11,15 @@ import { useUserStore } from "@/stores/userStore";
 const ProfilePage = () => {
     const [activeTab, setActiveTab] = useState<number>(1);
     const user = useUserStore((s) => s.user);
+
+    useEffect(() => {
+        if (!user) {
+            const localUser = localStorage.getItem("userInfo");
+            if (localUser) {
+                useUserStore.getState().setUser(JSON.parse(localUser));
+            }
+        }
+    }, [user]);
 
     const avatarSrc =
         user?.my_profile_url && user.my_profile_url !== ""
