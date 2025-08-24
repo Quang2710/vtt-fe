@@ -11,6 +11,20 @@ type Campaign = {
   name: string;
   description: string;
   image: string;
+  key: string;
+  createdAt: string;
+  updatedAt: string;
+  content: string | null;
+  status: string;
+  author_id: string;
+  author_type: string;
+  is_featured: boolean;
+  views: number;
+  format_type: string | null;
+  start_date: string | null;
+  end_date: string | null;
+  target_amount: string;
+  total_amount: string;
 };
 
 const statusOptions = [
@@ -129,13 +143,13 @@ const Browse = () => {
             {campaigns.map((cat, idx) => (
               <Blog
                 onClick={() => {
-                  router.push(`/detail-blog/${cat.id}`);
+                  router.push(`/detail-blog/${cat.key}?id=${cat.id}`);
                 }}
                 key={`${cat.id}-${idx}`}
                 classes="w-full min-w-[220px] md:min-w-[240px] p-2 min-h-[420px] cursor-pointer"
                 item={{
                   ...cat,
-                  title: cat.name,
+                  title:cat.name,
                 }}
               />
             ))}
